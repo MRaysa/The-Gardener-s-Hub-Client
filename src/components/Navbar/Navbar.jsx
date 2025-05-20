@@ -63,7 +63,7 @@ const Navbar = () => {
 
     {
       path: "/share-tip",
-      name: "Share a Tip",
+      name: "Share a Garden Tip",
       icon: <FaPenAlt className="mr-1" />,
     },
     {
@@ -75,7 +75,6 @@ const Navbar = () => {
       path: "/browse-tips",
       name: "Browse Tips",
       icon: <FaSearch className="mr-1" />,
-      public: true,
     },
   ];
 
@@ -105,13 +104,13 @@ const Navbar = () => {
           <div className="hidden md:flex flex-1 justify-center">
             <div className="flex items-center space-x-1">
               {navItems.map((item) => (
-                <Link
+                <NavLink
                   key={item.path}
                   to={item.path}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${hoverText} transition duration-300 flex items-center`}
                 >
                   {item.icon} {item.name}
-                </Link>
+                </NavLink>
               ))}
             </div>
           </div>

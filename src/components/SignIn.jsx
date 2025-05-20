@@ -50,13 +50,16 @@ const SignIn = () => {
       };
 
       // Update last sign-in time in database
-      const updateResponse = await fetch("http://localhost:3000/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signInInfo),
-      });
+      const updateResponse = await fetch(
+        "https://the-gardener-s-hub-server.vercel.app/users",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signInInfo),
+        }
+      );
 
       if (!updateResponse.ok) {
         const errorData = await updateResponse.json();
@@ -102,19 +105,22 @@ const SignIn = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      const updateResponse = await fetch("http://localhost:3000/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: user.uid,
-          email: user.email,
-          lastSignInTime: user.metadata.lastSignInTime,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        }),
-      });
+      const updateResponse = await fetch(
+        "https://the-gardener-s-hub-server.vercel.app/users",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            lastSignInTime: user.metadata.lastSignInTime,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          }),
+        }
+      );
 
       if (!updateResponse.ok) {
         throw new Error("Failed to update Google sign-in info");

@@ -4,6 +4,10 @@ import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
+import ExploreGardeners from "../pages/ExploreGardeners";
+import ShareAGardenTip from "../pages/ShareAGardenTip";
+import MyTips from "../pages/MyTips";
+import BrowseTips from "../pages/BrowseTips";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +26,22 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         Component: SignUp,
+      },
+      {
+        path: "/explore-gardeners",
+        Component: ExploreGardeners,
+      },
+      {
+        path: "/share-tip",
+        Component: ShareAGardenTip,
+      },
+      {
+        path: "/my-tips",
+        Component: MyTips,
+      },
+      {
+        path: "/browse-tips",
+        Component: BrowseTips,
       },
     ],
   },

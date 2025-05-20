@@ -109,12 +109,15 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/gardeners" className={`${hoverText} transition`}>
-                  Find Gardeners
+                <Link
+                  to="/explore-gardeners"
+                  className={`${hoverText} transition`}
+                >
+                  Explore Gardeners
                 </Link>
               </li>
               <li>
-                <Link to="/events" className={`${hoverText} transition`}>
+                <Link to="/" className={`${hoverText} transition`}>
                   Gardening Events
                 </Link>
               </li>

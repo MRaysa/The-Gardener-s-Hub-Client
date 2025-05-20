@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaGoogle,
@@ -101,13 +100,16 @@ const SignUp = () => {
 
   const saveUserToDatabase = async (userProfile) => {
     try {
-      const response = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userProfile),
-      });
+      const response = await fetch(
+        "https://the-gardener-s-hub-server.vercel.app/users ",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userProfile),
+        }
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -283,7 +285,7 @@ const SignUp = () => {
                     placeholder="https://example.com/image.jpg "
                     className={`w-full px-3 py-2 border ${
                       errors.photoURL ? "border-red-500" : "border-gray-300"
-                    } rounded-md text-sm shadow-sm placeholder:text-green-400`}
+                    } rounded-md text-sm shadow-sm placeholder:text-gray-400 text-white`}
                   />
                   {errors.photoURL && (
                     <p className="text-red-500 text-xs mt-1">
@@ -312,7 +314,7 @@ const SignUp = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.name ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-green-400`}
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
               placeholder="John Doe"
               required
             />
@@ -338,7 +340,7 @@ const SignUp = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-green-400`}
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
               placeholder="your@email.com"
               required
             />
@@ -365,7 +367,7 @@ const SignUp = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-2 border ${
                   errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-green-400`}
+                } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
                 placeholder="••••••••"
                 required
               />
@@ -408,7 +410,7 @@ const SignUp = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.phone ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-green-400`}
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
               placeholder="1234567890"
             />
             {errors.phone && (
@@ -430,7 +432,7 @@ const SignUp = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-green-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white"
               placeholder="123 Main St, City, Country"
               rows="2"
             />
