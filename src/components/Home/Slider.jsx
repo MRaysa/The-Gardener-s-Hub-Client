@@ -39,7 +39,7 @@ const Slider = () => {
   ];
 
   return (
-    <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-green-700 to-teal-800 shadow-lg m-12">
+    <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-green-700 to-teal-800 shadow-lg m-4 md:m-12">
       {/* Animated Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-[url('https://i.ibb.co/fdQGfQpp/img1.jpg')] bg-cover bg-center animate-pulse-slow"></div>
