@@ -64,15 +64,12 @@ const TipDetailsPage = () => {
     if (isLiked) return;
 
     try {
-      const response = await fetch(
-        `https://the-gardener-s-hub-server.vercel.app/${id}/like`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:3000/tips/${id}/like`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to like tip");
