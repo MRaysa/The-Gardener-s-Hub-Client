@@ -16,7 +16,9 @@ const BrowseTips = () => {
   useEffect(() => {
     const fetchPublicTips = async () => {
       try {
-        const response = await fetch("http://localhost:3000/tips/public");
+        const response = await fetch(
+          "https://the-gardener-s-hub-server.vercel.app/tips/public"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch tips");
         }
