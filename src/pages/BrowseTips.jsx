@@ -25,6 +25,7 @@ const BrowseTips = () => {
         const data = await response.json();
         setTips(data.data);
         setFilteredTips(data.data);
+        setLoading(false);
       } catch (err) {
         setError(err.message);
         setLoading(false);
