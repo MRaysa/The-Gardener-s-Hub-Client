@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         Component: BrowseTips,
       },
       {
-        path: "/tip-details",
+        path: "/tips/:id",
         Component: TipDetailsPage,
       },
     ],
