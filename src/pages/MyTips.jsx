@@ -17,7 +17,7 @@ const MyTips = () => {
     const fetchMyTips = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/mytips/${userEmail}`
+          `https://the-gardener-s-hub-server.vercel.app/mytips/${userEmail}`
         );
 
         if (!response.ok) {
@@ -64,9 +64,12 @@ const MyTips = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:3000/tips/${tipId}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `https://the-gardener-s-hub-server.vercel.app/tips/${tipId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to delete tip");

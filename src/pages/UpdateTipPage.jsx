@@ -25,7 +25,9 @@ const UpdateTipPage = () => {
   useEffect(() => {
     const fetchTip = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/tips/${id}`);
+        const response = await fetch(
+          `https://the-gardener-s-hub-server.vercel.app/tips/${id}`
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch tip");
@@ -74,13 +76,16 @@ const UpdateTipPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/tips/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `https://the-gardener-s-hub-server.vercel.app/tips/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update tip");
