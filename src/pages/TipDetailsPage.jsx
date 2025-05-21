@@ -87,9 +87,8 @@ const TipDetailsPage = () => {
         setLikeCount((prev) => prev + 1);
 
         Swal.fire({
-          position: "top-end",
           icon: "success",
-          title: "Tip liked!",
+          title: "Tip liked..!",
           showConfirmButton: false,
           timer: 1500,
         });
