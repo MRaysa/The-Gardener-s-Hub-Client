@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { FaHome, FaSearch, FaLeaf } from "react-icons/fa";
 
