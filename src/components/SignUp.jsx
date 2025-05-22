@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaGoogle,
@@ -11,7 +12,7 @@ import {
   FaPhone,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { useNavigate, NavLink } from "react-router";
+import { useNavigate, NavLink, useLocation } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
 
@@ -19,7 +20,7 @@ const SignUp = () => {
   const { createUser, googleSignIn, updateUser, loading } =
     useContext(AuthContext);
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -156,7 +157,7 @@ const SignUp = () => {
           color: "#ffffff",
           iconColor: "#10b981",
         });
-        navigate("/");
+        navigate(location?.state || "/");
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -180,7 +181,7 @@ const SignUp = () => {
       };
 
       await saveUserToDatabase(userProfile);
-      navigate("/");
+      navigate(location?.state || "/");
     } catch (error) {
       setErrors({ firebase: error.message });
     }

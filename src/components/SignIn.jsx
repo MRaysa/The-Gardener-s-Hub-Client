@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import {
   FaGoogle,
-  FaFacebook,
-  FaGithub,
   FaEnvelope,
   FaLock,
   FaEye,
@@ -76,7 +74,7 @@ const SignIn = () => {
         color: "#ffffff",
       });
 
-      navigate(location?.state?.from || "/");
+      navigate(location?.state || "/");
     } catch (error) {
       console.error("Sign-in error:", error);
       setError(error.message);
