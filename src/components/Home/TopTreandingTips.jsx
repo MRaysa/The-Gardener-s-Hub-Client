@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaHeart,
@@ -12,11 +11,34 @@ import {
 } from "react-icons/fa";
 import { useTheme } from "../../contexts/ThemeContext";
 
-const TopTreandingTips = () => {
+const TopTrendingTips = () => {
   const [trendingTips, setTrendingTips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { theme } = useTheme();
+
+  // Theme-based styles
+  const themeStyles = {
+    light: {
+      bg: "bg-white",
+      text: "text-gray-800",
+      secondaryText: "text-gray-600",
+      card: "bg-white",
+      border: "border-gray-200",
+      button: "bg-green-600 hover:bg-green-700 text-white",
+    },
+    dark: {
+      bg: "bg-gray-900",
+      text: "text-gray-100",
+      secondaryText: "text-gray-300",
+      card: "bg-gray-800",
+      border: "border-gray-700",
+      button: "bg-green-700 hover:bg-green-600 text-white",
+    },
+  };
+
+  const currentTheme = themeStyles[theme] || themeStyles.light;
 
   useEffect(() => {
     const fetchTrendingTips = async () => {
@@ -64,7 +86,9 @@ const TopTreandingTips = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg max-w-3xl mx-auto"
+        className={`${
+          theme === "dark" ? "bg-red-900" : "bg-red-100"
+        } border-l-4 border-red-500 text-red-700 p-4 rounded-lg max-w-3xl mx-auto`}
       >
         <p className="font-bold">Error</p>
         <p>{error}</p>
@@ -73,7 +97,9 @@ const TopTreandingTips = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div
+      className={`min-h-screen py-16 px-4 sm:px-6 lg:px-8 m-8 rounded-2xl ${currentTheme.bg}`}
+    >
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -81,10 +107,16 @@ const TopTreandingTips = () => {
         transition={{ duration: 0.5 }}
         className="text-center mb-16"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-4">
+        <h1
+          className={`text-4xl md:text-5xl font-bold mb-4 ${
+            theme === "dark" ? "text-green-400" : "text-green-800"
+          }`}
+        >
           Top <span className="text-green-600">Trending</span> Gardening Tips
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p
+          className={`text-lg ${currentTheme.secondaryText} max-w-2xl mx-auto`}
+        >
           Discover the most popular gardening advice from our community experts
         </p>
       </motion.div>
@@ -99,7 +131,11 @@ const TopTreandingTips = () => {
             transition={{ delay: index * 0.1, duration: 0.5 }}
             whileHover={{ y: -5 }}
             onClick={() => handleTipClick(tip._id)}
-            className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl"
+            className={`${
+              currentTheme.card
+            } rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl ${
+              theme === "dark" ? "shadow-gray-900" : "shadow-gray-200"
+            }`}
           >
             {/* Tip Image */}
             <div className="relative h-56 overflow-hidden">
@@ -117,7 +153,13 @@ const TopTreandingTips = () => {
             <div className="p-6">
               {/* Category and Difficulty */}
               <div className="flex justify-between items-center mb-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    theme === "dark"
+                      ? "bg-green-900 text-green-300"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   <FaLeaf className="mr-2" />
                   {tip.category}
                 </span>
@@ -125,9 +167,15 @@ const TopTreandingTips = () => {
                   className={`px-3 py-1 rounded-full text-sm font-medium
                     ${
                       tip.difficulty === "Easy"
-                        ? "bg-green-100 text-green-800"
+                        ? theme === "dark"
+                          ? "bg-green-900 text-green-300"
+                          : "bg-green-100 text-green-800"
                         : tip.difficulty === "Medium"
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? theme === "dark"
+                          ? "bg-yellow-900 text-yellow-300"
+                          : "bg-yellow-100 text-yellow-800"
+                        : theme === "dark"
+                        ? "bg-red-900 text-red-300"
                         : "bg-red-100 text-red-800"
                     }`}
                 >
@@ -136,21 +184,37 @@ const TopTreandingTips = () => {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 mb-5 line-clamp-3">
+              <p className={`${currentTheme.secondaryText} mb-5 line-clamp-3`}>
                 {tip.description}
               </p>
 
               {/* Author and Metadata */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div
+                className={`flex items-center justify-between pt-4 border-t ${
+                  theme === "dark" ? "border-gray-700" : "border-gray-100"
+                }`}
+              >
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <FaUser className="text-green-600" />
+                  <div
+                    className={`w-10 h-10 rounded-full ${
+                      theme === "dark" ? "bg-gray-700" : "bg-green-100"
+                    } flex items-center justify-center mr-3`}
+                  >
+                    <FaUser
+                      className={
+                        theme === "dark" ? "text-green-400" : "text-green-600"
+                      }
+                    />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className={`text-sm font-medium ${currentTheme.text}`}>
                       {tip.name}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p
+                      className={`text-xs ${
+                        theme === "dark" ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       {new Date(tip.createdAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -158,8 +222,12 @@ const TopTreandingTips = () => {
 
                 {/* Likes */}
                 <div className="flex items-center space-x-1">
-                  <FaThumbsUp className="text-green-500" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <FaThumbsUp
+                    className={
+                      theme === "dark" ? "text-green-400" : "text-green-500"
+                    }
+                  />
+                  <span className={`text-sm font-medium ${currentTheme.text}`}>
                     {tip.totalLiked}
                   </span>
                 </div>
@@ -172,4 +240,4 @@ const TopTreandingTips = () => {
   );
 };
 
-export default TopTreandingTips;
+export default TopTrendingTips;
