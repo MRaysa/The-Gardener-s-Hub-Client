@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaMapMarkerAlt,
@@ -9,12 +8,37 @@ import {
   FaRegStar,
   FaUserFriends,
 } from "react-icons/fa";
+import { useTheme } from "../../contexts/ThemeContext";
+import { toast } from "react-hot-toast";
 
 const ActiveGardeners = () => {
   const [gardeners, setGardeners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedGardener, setSelectedGardener] = useState(null);
+  const { theme } = useTheme();
+
+  // Theme-based styles
+  const themeStyles = {
+    light: {
+      bg: "bg-gradient-to-b from-green-50 to-white",
+      text: "text-gray-800",
+      card: "bg-white",
+      secondaryText: "text-gray-600",
+      button: "bg-green-600 hover:bg-green-700 text-white",
+      outlineButton: "border border-green-600 text-green-600 hover:bg-green-50",
+    },
+    dark: {
+      bg: "bg-gradient-to-b from-gray-900 to-gray-800",
+      text: "text-gray-100",
+      card: "bg-gray-700",
+      secondaryText: "text-gray-300",
+      button: "bg-green-700 hover:bg-green-800 text-white",
+      outlineButton: "border border-green-500 text-green-400 hover:bg-gray-600",
+    },
+  };
+
+  const currentTheme = themeStyles[theme] || themeStyles.light;
 
   useEffect(() => {
     const fetchActiveGardeners = async () => {
@@ -37,6 +61,36 @@ const ActiveGardeners = () => {
     fetchActiveGardeners();
   }, []);
 
+  const handleFollow = () => {
+    toast.success(`You're now following ${selectedGardener.name}!`, {
+      position: "top-right",
+      style: {
+        backgroundColor: theme === "dark" ? "#1f2937" : "#fff",
+        color: theme === "dark" ? "#fff" : "#1f2937",
+      },
+      iconTheme: {
+        primary: "#10b981",
+        secondary: theme === "dark" ? "#1f2937" : "#fff",
+      },
+    });
+    // Here you would typically make an API call to follow the gardener
+  };
+
+  const handleMessage = () => {
+    toast.success(`Message sent to ${selectedGardener.name}!`, {
+      position: "top-right",
+      style: {
+        backgroundColor: theme === "dark" ? "#1f2937" : "#fff",
+        color: theme === "dark" ? "#fff" : "#1f2937",
+      },
+      iconTheme: {
+        primary: "#10b981",
+        secondary: theme === "dark" ? "#1f2937" : "#fff",
+      },
+    });
+    // Here you would typically implement the messaging functionality
+  };
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-64">
@@ -47,7 +101,9 @@ const ActiveGardeners = () => {
   if (error)
     return (
       <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+        className={`${
+          theme === "dark" ? "bg-red-900" : "bg-red-100"
+        } border border-red-400 text-red-700 px-4 py-3 rounded relative`}
         role="alert"
       >
         <strong className="font-bold">Error: </strong>
@@ -56,7 +112,9 @@ const ActiveGardeners = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white py-16 px-4 sm:px-6 lg:px-8">
+    <div
+      className={`min-h-screen ${currentTheme.bg} py-16 px-4 sm:px-6 lg:px-8`}
+    >
       <div className="max-w-8xl mx-auto">
         {/* Header with animated text */}
         <motion.div
@@ -64,10 +122,16 @@ const ActiveGardeners = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-3">
+          <h1
+            className={`text-4xl md:text-5xl font-bold ${
+              theme === "dark" ? "text-green-400" : "text-green-800"
+            } mb-3`}
+          >
             Our <span className="text-green-600">Active</span> Gardeners
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p
+            className={`text-lg ${currentTheme.secondaryText} max-w-2xl mx-auto`}
+          >
             Connect with passionate gardening experts ready to share their
             knowledge
           </p>
@@ -82,7 +146,11 @@ const ActiveGardeners = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
               whileHover={{ y: -5 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer"
+              className={`${
+                currentTheme.card
+              } rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer ${
+                theme === "dark" ? "shadow-gray-800" : "shadow-gray-200"
+              }`}
               onClick={() => setSelectedGardener(gardener)}
             >
               <div className="relative h-64">
@@ -111,17 +179,23 @@ const ActiveGardeners = () => {
 
               <div className="p-6">
                 <div className="flex justify-between mb-4">
-                  <div className="flex items-center text-gray-600">
+                  <div
+                    className={`flex items-center ${currentTheme.secondaryText}`}
+                  >
                     <FaMapMarkerAlt className="text-green-500 mr-2" />
                     <span>{gardener.location}</span>
                   </div>
-                  <div className="flex items-center text-gray-600">
+                  <div
+                    className={`flex items-center ${currentTheme.secondaryText}`}
+                  >
                     <FaClock className="text-green-500 mr-2" />
                     <span>{gardener.experience}</span>
                   </div>
                 </div>
 
-                <p className="text-gray-700 mb-4 line-clamp-2">
+                <p
+                  className={`${currentTheme.secondaryText} mb-4 line-clamp-2`}
+                >
                   {gardener.bio}
                 </p>
 
@@ -135,7 +209,11 @@ const ActiveGardeners = () => {
                       )
                     )}
                   </div>
-                  <div className="flex items-center text-green-600 font-medium">
+                  <div
+                    className={`flex items-center ${
+                      theme === "dark" ? "text-green-400" : "text-green-600"
+                    } font-medium`}
+                  >
                     <FaUserFriends className="mr-2" />
                     <span>{gardener.totalSharedTips || 0} tips</span>
                   </div>
@@ -152,7 +230,11 @@ const ActiveGardeners = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className={`${
+              currentTheme.card
+            } rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+              theme === "dark" ? "shadow-gray-800" : "shadow-gray-200"
+            }`}
           >
             <div className="relative h-64">
               <img
@@ -165,7 +247,11 @@ const ActiveGardeners = () => {
               />
               <button
                 onClick={() => setSelectedGardener(null)}
-                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md"
+                className={`absolute top-4 right-4 ${
+                  theme === "dark"
+                    ? "bg-gray-600 hover:bg-gray-500"
+                    : "bg-white/80 hover:bg-white"
+                } text-gray-800 p-2 rounded-full shadow-md`}
               >
                 ✕
               </button>
@@ -174,10 +260,14 @@ const ActiveGardeners = () => {
             <div className="p-8">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-3xl font-bold text-gray-800">
+                  <h2 className={`text-3xl font-bold ${currentTheme.text}`}>
                     {selectedGardener.name}
                   </h2>
-                  <p className="text-green-600 font-medium text-lg">
+                  <p
+                    className={`${
+                      theme === "dark" ? "text-green-400" : "text-green-600"
+                    } font-medium text-lg`}
+                  >
                     {selectedGardener.specialty}
                   </p>
                 </div>
@@ -189,34 +279,60 @@ const ActiveGardeners = () => {
                       <FaRegStar key={i} className="text-gray-300 w-5 h-5" />
                     )
                   )}
-                  <span className="ml-2 text-gray-600">4.2</span>
+                  <span className={`ml-2 ${currentTheme.secondaryText}`}>
+                    4.2
+                  </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Location</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-4 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Location
+                  </p>
                   <p className="font-medium flex items-center">
                     <FaMapMarkerAlt className="mr-2 text-green-500" />
                     {selectedGardener.location}
                   </p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Experience</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-4 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Experience
+                  </p>
                   <p className="font-medium flex items-center">
                     <FaClock className="mr-2 text-green-500" />
                     {selectedGardener.experience}
                   </p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Specialty</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-4 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Specialty
+                  </p>
                   <p className="font-medium flex items-center">
                     <FaSeedling className="mr-2 text-green-500" />
                     {selectedGardener.specialty}
                   </p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Tips Shared</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-4 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Tips Shared
+                  </p>
                   <p className="font-medium flex items-center">
                     <FaUserFriends className="mr-2 text-green-500" />
                     {selectedGardener.totalSharedTips || 0}
@@ -225,14 +341,21 @@ const ActiveGardeners = () => {
               </div>
 
               <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                <h3
+                  className={`text-xl font-semibold ${currentTheme.text} mb-3`}
+                >
                   About
                 </h3>
-                <p className="text-gray-700">{selectedGardener.bio}</p>
+                <p className={currentTheme.secondaryText}>
+                  {selectedGardener.bio}
+                </p>
               </div>
 
               <div className="flex space-x-4">
-                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2">
+                <button
+                  onClick={handleMessage}
+                  className={`flex-1 ${currentTheme.button} py-3 px-4 rounded-lg flex items-center justify-center gap-2`}
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -248,7 +371,10 @@ const ActiveGardeners = () => {
                   </svg>
                   Message
                 </button>
-                <button className="flex-1 border border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg flex items-center justify-center gap-2">
+                <button
+                  onClick={handleFollow}
+                  className={`flex-1 ${currentTheme.outlineButton} py-3 px-4 rounded-lg flex items-center justify-center gap-2`}
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
