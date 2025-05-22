@@ -145,7 +145,7 @@ const SeasonalGuide = () => {
           </p>
         </div>
 
-        <div className="flex justify-center mb-12 space-x-2">
+        <div className="flex justify-center flex-col md:flex-row gap-2 mb-12 space-x-2">
           {["spring", "summer", "fall", "winter"].map((season) => (
             <motion.button
               key={season}
