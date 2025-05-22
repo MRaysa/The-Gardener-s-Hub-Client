@@ -9,6 +9,8 @@ import {
   FaUserFriends,
   FaSeedling,
 } from "react-icons/fa";
+import { useTheme } from "../contexts/ThemeContext";
+import { toast } from "react-hot-toast";
 
 const ExploreGardeners = () => {
   const [gardeners, setGardeners] = useState([]);
@@ -16,6 +18,29 @@ const ExploreGardeners = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedGardener, setSelectedGardener] = useState(null);
+  const { theme } = useTheme();
+
+  // Theme-based styles
+  const themeStyles = {
+    light: {
+      bg: "bg-gradient-to-b from-green-50 to-white",
+      text: "text-gray-800",
+      card: "bg-white",
+      secondaryText: "text-gray-600",
+      button: "bg-green-600 hover:bg-green-700 text-white",
+      outlineButton: "border border-green-600 text-green-600 hover:bg-green-50",
+    },
+    dark: {
+      bg: "bg-gradient-to-b from-gray-900 to-gray-800",
+      text: "text-gray-100",
+      card: "bg-gray-700",
+      secondaryText: "text-gray-300",
+      button: "bg-green-700 hover:bg-green-800 text-white",
+      outlineButton: "border border-green-500 text-green-400 hover:bg-gray-600",
+    },
+  };
+
+  const currentTheme = themeStyles[theme] || themeStyles.light;
 
   useEffect(() => {
     const fetchGardeners = async () => {
@@ -44,6 +69,34 @@ const ExploreGardeners = () => {
     return matchesSearch && matchesFilter;
   });
 
+  const handleFollow = () => {
+    toast.success(`You're now following ${selectedGardener.name}!`, {
+      position: "top-right",
+      style: {
+        backgroundColor: theme === "dark" ? "#1f2937" : "#fff",
+        color: theme === "dark" ? "#fff" : "#1f2937",
+      },
+      iconTheme: {
+        primary: "#10b981",
+        secondary: theme === "dark" ? "#1f2937" : "#fff",
+      },
+    });
+  };
+
+  const handleMessage = () => {
+    toast.success(`Message sent to ${selectedGardener.name}!`, {
+      position: "top-right",
+      style: {
+        backgroundColor: theme === "dark" ? "#1f2937" : "#fff",
+        color: theme === "dark" ? "#fff" : "#1f2937",
+      },
+      iconTheme: {
+        primary: "#10b981",
+        secondary: theme === "dark" ? "#1f2937" : "#fff",
+      },
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -53,7 +106,9 @@ const ExploreGardeners = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className={`min-h-screen ${currentTheme.bg} py-12 px-4 sm:px-6 lg:px-8 m-4 rounded-2xl`}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -61,11 +116,15 @@ const ExploreGardeners = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl font-bold text-green-800 mb-4"
+            className={`text-4xl font-bold ${
+              theme === "dark" ? "text-green-400" : "text-green-800"
+            } mb-4`}
           >
             Meet Our Gardening Experts
           </motion.h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p
+            className={`text-lg ${currentTheme.secondaryText} max-w-2xl mx-auto`}
+          >
             Connect with experienced gardeners who can help your plants thrive
           </p>
         </div>
@@ -75,12 +134,24 @@ const ExploreGardeners = () => {
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
             <div className="relative w-full md:w-96">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSearch className="text-gray-400" />
+                <FaSearch
+                  className={
+                    theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }
+                />
               </div>
               <input
                 type="text"
                 placeholder="Search by name or specialty..."
-                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className={`pl-10 pr-4 py-3 w-full border ${
+                  theme === "dark"
+                    ? "border-gray-600 bg-gray-800 text-white"
+                    : "border-gray-300 bg-white"
+                } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                  theme === "dark"
+                    ? "placeholder-gray-400"
+                    : "placeholder-gray-500"
+                }`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -92,6 +163,8 @@ const ExploreGardeners = () => {
                 className={`px-4 py-2 rounded-full flex items-center ${
                   activeFilter === "all"
                     ? "bg-green-600 text-white"
+                    : theme === "dark"
+                    ? "bg-gray-700 text-gray-300"
                     : "bg-white text-gray-700"
                 }`}
               >
@@ -102,6 +175,8 @@ const ExploreGardeners = () => {
                 className={`px-4 py-2 rounded-full flex items-center ${
                   activeFilter === "active"
                     ? "bg-green-600 text-white"
+                    : theme === "dark"
+                    ? "bg-gray-700 text-gray-300"
                     : "bg-white text-gray-700"
                 }`}
               >
@@ -114,8 +189,8 @@ const ExploreGardeners = () => {
 
         {/* Gardeners Grid */}
         {filteredGardeners.length === 0 ? (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-medium text-gray-700">
+          <div className={`text-center py-12 ${currentTheme.text}`}>
+            <h3 className="text-xl font-medium">
               No gardeners found matching your criteria
             </h3>
             <button
@@ -123,7 +198,9 @@ const ExploreGardeners = () => {
                 setSearchTerm("");
                 setActiveFilter("all");
               }}
-              className="mt-4 text-green-600 hover:text-green-800"
+              className={`mt-4 ${
+                theme === "dark" ? "text-green-400" : "text-green-600"
+              } hover:underline`}
             >
               Clear filters
             </button>
@@ -137,7 +214,11 @@ const ExploreGardeners = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                className={`${
+                  currentTheme.card
+                } rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow ${
+                  theme === "dark" ? "shadow-gray-800" : "shadow-gray-200"
+                }`}
               >
                 <div className="relative h-48">
                   <img
@@ -161,30 +242,58 @@ const ExploreGardeners = () => {
 
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center text-gray-600">
+                    <div
+                      className={`flex items-center ${currentTheme.secondaryText}`}
+                    >
                       <FaMapMarkerAlt className="mr-1 text-green-600" />
                       <span>{gardener.location}</span>
                     </div>
-                    <div className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
+                    <div
+                      className={`flex items-center ${
+                        theme === "dark" ? "bg-gray-600" : "bg-green-100"
+                      } ${
+                        theme === "dark" ? "text-green-400" : "text-green-800"
+                      } px-2 py-1 rounded text-sm`}
+                    >
                       <FaSeedling className="mr-1" />
                       {gardener.experience}
                     </div>
                   </div>
 
-                  <p className="text-gray-700 mb-4 line-clamp-2">
+                  <p
+                    className={`${currentTheme.secondaryText} mb-4 line-clamp-2`}
+                  >
                     {gardener.bio}
                   </p>
 
                   <div className="flex justify-between items-center">
                     <div className="flex space-x-2">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                      <span
+                        className={`${
+                          theme === "dark" ? "bg-blue-900" : "bg-blue-100"
+                        } ${
+                          theme === "dark" ? "text-blue-300" : "text-blue-800"
+                        } px-2 py-1 rounded text-xs`}
+                      >
                         {gardener.age} yrs
                       </span>
-                      <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                      <span
+                        className={`${
+                          theme === "dark" ? "bg-purple-900" : "bg-purple-100"
+                        } ${
+                          theme === "dark"
+                            ? "text-purple-300"
+                            : "text-purple-800"
+                        } px-2 py-1 rounded text-xs`}
+                      >
                         {gardener.gender}
                       </span>
                     </div>
-                    <span className="text-green-600 font-bold flex items-center">
+                    <span
+                      className={`${
+                        theme === "dark" ? "text-green-400" : "text-green-600"
+                      } font-bold flex items-center`}
+                    >
                       <FaUserFriends className="mr-1" />
                       {gardener.totalSharedTips}
                     </span>
@@ -192,7 +301,11 @@ const ExploreGardeners = () => {
 
                   <button
                     onClick={() => setSelectedGardener(gardener)}
-                    className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors"
+                    className={`mt-4 w-full ${
+                      theme === "dark" ? "bg-green-700" : "bg-green-600"
+                    } hover:${
+                      theme === "dark" ? "bg-green-600" : "bg-green-700"
+                    } text-white py-2 px-4 rounded-lg transition-colors`}
                   >
                     View Profile
                   </button>
@@ -209,7 +322,11 @@ const ExploreGardeners = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className={`${
+              currentTheme.card
+            } rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+              theme === "dark" ? "shadow-gray-800" : "shadow-gray-200"
+            }`}
           >
             <div className="relative">
               <img
@@ -219,7 +336,11 @@ const ExploreGardeners = () => {
               />
               <button
                 onClick={() => setSelectedGardener(null)}
-                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md"
+                className={`absolute top-4 right-4 ${
+                  theme === "dark" ? "bg-gray-600" : "bg-white/80"
+                } hover:${
+                  theme === "dark" ? "bg-gray-500" : "bg-white"
+                } text-gray-800 p-2 rounded-full shadow-md`}
               >
                 ✕
               </button>
@@ -228,10 +349,14 @@ const ExploreGardeners = () => {
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className={`text-2xl font-bold ${currentTheme.text}`}>
                     {selectedGardener.name}
                   </h2>
-                  <p className="text-green-600 font-medium">
+                  <p
+                    className={`${
+                      theme === "dark" ? "text-green-400" : "text-green-600"
+                    } font-medium`}
+                  >
                     {selectedGardener.specialty}
                   </p>
                 </div>
@@ -246,25 +371,49 @@ const ExploreGardeners = () => {
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">4.2</span>
+                  <span className={`text-sm ${currentTheme.secondaryText}`}>
+                    4.2
+                  </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-600">Experience</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-3 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Experience
+                  </p>
                   <p className="font-medium">{selectedGardener.experience}</p>
                 </div>
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-600">Location</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-3 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Location
+                  </p>
                   <p className="font-medium">{selectedGardener.location}</p>
                 </div>
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-600">Age</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-3 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>Age</p>
                   <p className="font-medium">{selectedGardener.age} years</p>
                 </div>
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-600">Tips Shared</p>
+                <div
+                  className={`${
+                    theme === "dark" ? "bg-gray-600" : "bg-green-50"
+                  } p-3 rounded-lg`}
+                >
+                  <p className={`text-sm ${currentTheme.secondaryText}`}>
+                    Tips Shared
+                  </p>
                   <p className="font-medium">
                     {selectedGardener.totalSharedTips}
                   </p>
@@ -272,17 +421,25 @@ const ExploreGardeners = () => {
               </div>
 
               <div className="mb-6">
-                <h3 className="font-bold mb-2">About</h3>
-                <p className="text-gray-700">{selectedGardener.bio}</p>
+                <h3 className={`font-bold mb-2 ${currentTheme.text}`}>About</h3>
+                <p className={currentTheme.secondaryText}>
+                  {selectedGardener.bio}
+                </p>
               </div>
 
               <div className="mb-6">
-                <h3 className="font-bold mb-2">Specialty Areas</h3>
+                <h3 className={`font-bold mb-2 ${currentTheme.text}`}>
+                  Specialty Areas
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedGardener.specialty.split(", ").map((item) => (
                     <span
                       key={item}
-                      className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
+                      className={`${
+                        theme === "dark" ? "bg-gray-600" : "bg-green-100"
+                      } ${
+                        theme === "dark" ? "text-green-400" : "text-green-800"
+                      } px-3 py-1 rounded-full text-sm`}
                     >
                       {item}
                     </span>
@@ -291,7 +448,10 @@ const ExploreGardeners = () => {
               </div>
 
               <div className="flex space-x-4">
-                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2">
+                <button
+                  onClick={handleMessage}
+                  className={`flex-1 ${currentTheme.button} py-3 px-4 rounded-lg flex items-center justify-center gap-2`}
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -307,7 +467,10 @@ const ExploreGardeners = () => {
                   </svg>
                   Message
                 </button>
-                <button className="flex-1 border border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg flex items-center justify-center gap-2">
+                <button
+                  onClick={handleFollow}
+                  className={`flex-1 ${currentTheme.outlineButton} py-3 px-4 rounded-lg flex items-center justify-center gap-2`}
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"

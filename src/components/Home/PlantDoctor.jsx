@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { FaLeaf, FaTint, FaSun, FaBug, FaRedo } from "react-icons/fa";
 
