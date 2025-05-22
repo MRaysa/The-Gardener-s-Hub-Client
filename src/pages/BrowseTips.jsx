@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { FaEye, FaLeaf, FaFilter } from "react-icons/fa";
+import { useTheme } from "../contexts/ThemeContext";
 
 const BrowseTips = () => {
   const [tips, setTips] = useState([]);
@@ -9,9 +10,40 @@ const BrowseTips = () => {
   const [error, setError] = useState(null);
   const [difficultyFilter, setDifficultyFilter] = useState("All");
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   // Difficulty options for the filter
   const difficultyOptions = ["All", "Easy", "Medium", "Hard"];
+
+  // Theme styles
+  const themeStyles = {
+    light: {
+      bg: "bg-white",
+      text: "text-gray-800",
+      secondaryText: "text-gray-600",
+      card: "bg-white",
+      tableHeader: "bg-green-50",
+      tableRowHover: "hover:bg-green-50",
+      button: "text-green-600 hover:text-green-800",
+      emptyStateBg: "bg-white",
+      border: "border-gray-200",
+      selectBg: "bg-white",
+    },
+    dark: {
+      bg: "bg-gray-900",
+      text: "text-gray-100",
+      secondaryText: "text-gray-300",
+      card: "bg-gray-800",
+      tableHeader: "bg-gray-700",
+      tableRowHover: "hover:bg-gray-700",
+      button: "text-green-400 hover:text-green-300",
+      emptyStateBg: "bg-gray-800",
+      border: "border-gray-600",
+      selectBg: "bg-gray-700",
+    },
+  };
+
+  const currentTheme = themeStyles[theme] || themeStyles.light;
 
   useEffect(() => {
     const fetchPublicTips = async () => {
@@ -61,26 +93,45 @@ const BrowseTips = () => {
 
   if (error) {
     return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-        Error: {error}
+      <div
+        className={`${
+          theme === "dark" ? "bg-red-900" : "bg-red-100"
+        } border-l-4 border-red-500 text-red-700 p-4 rounded max-w-3xl mx-auto`}
+      >
+        <p className="font-bold">Error:</p>
+        <p>{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-green-800 flex items-center">
+    <div
+      className={`container mx-auto px-4 py-8 m-4 rounded-2xl ${currentTheme.bg}`}
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h1
+          className={`text-2xl md:text-3xl font-bold flex items-center ${
+            theme === "dark" ? "text-green-400" : "text-green-800"
+          }`}
+        >
           <FaLeaf className="mr-2" /> Browse Gardening Tips
         </h1>
 
         {/* Difficulty Filter */}
-        <div className="mt-4 md:mt-0 flex items-center">
-          <FaFilter className="text-green-600 mr-2" />
+        <div className="flex items-center">
+          <FaFilter
+            className={`mr-2 ${
+              theme === "dark" ? "text-green-400" : "text-green-600"
+            }`}
+          />
           <select
             value={difficultyFilter}
             onChange={(e) => setDifficultyFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={`border ${currentTheme.border} rounded-md px-3 py-2 ${
+              currentTheme.selectBg
+            } ${currentTheme.text} focus:outline-none focus:ring-2 ${
+              theme === "dark" ? "focus:ring-green-400" : "focus:ring-green-500"
+            }`}
           >
             {difficultyOptions.map((option) => (
               <option key={option} value={option}>
@@ -92,17 +143,21 @@ const BrowseTips = () => {
       </div>
 
       {filteredTips.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg mb-4">
+        <div
+          className={`text-center py-12 rounded-lg ${currentTheme.emptyStateBg} shadow`}
+        >
+          <p className={`text-lg ${currentTheme.secondaryText} mb-4`}>
             {difficultyFilter === "All"
               ? "No gardening tips available yet."
               : `No ${difficultyFilter} difficulty tips found.`}
           </p>
-          <p className="text-gray-400">
+          <p className={currentTheme.secondaryText}>
             {difficultyFilter !== "All" && (
               <button
                 onClick={() => setDifficultyFilter("All")}
-                className="text-green-600 hover:underline"
+                className={`${
+                  theme === "dark" ? "text-green-400" : "text-green-600"
+                } hover:underline`}
               >
                 Show all tips instead
               </button>
@@ -110,78 +165,122 @@ const BrowseTips = () => {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <div className="overflow-x-auto rounded-lg shadow">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-green-50">
+            <thead className={currentTheme.tableHeader}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <span className={currentTheme.secondaryText}>Image</span>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Title
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <span className={currentTheme.secondaryText}>Title</span>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Plant Type
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
+                  <span className={currentTheme.secondaryText}>Plant Type</span>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                  <span className={currentTheme.secondaryText}>Category</span>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Difficulty
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
+                  <span className={currentTheme.secondaryText}>Difficulty</span>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <span className={currentTheme.secondaryText}>Actions</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className={`divide-y divide-gray-200 ${currentTheme.card}`}>
               {filteredTips.map((tip) => (
                 <tr
                   key={tip._id}
-                  className="hover:bg-green-50 transition-colors"
+                  className={`${currentTheme.tableRowHover} transition-colors`}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-4 whitespace-nowrap">
                     {tip.imageUrl ? (
                       <img
                         src={tip.imageUrl}
                         alt={tip.title}
-                        className="h-16 w-16 object-cover rounded"
+                        className="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded"
                       />
                     ) : (
-                      <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span className="text-gray-400 text-xs">No Image</span>
+                      <div
+                        className={`h-12 w-12 sm:h-16 sm:w-16 ${
+                          theme === "dark" ? "bg-gray-700" : "bg-gray-100"
+                        } rounded flex items-center justify-center`}
+                      >
+                        <span className={currentTheme.secondaryText}>
+                          No Image
+                        </span>
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{tip.title}</div>
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className={`font-medium ${currentTheme.text}`}>
+                      {tip.title}
+                    </div>
+                    <div className="text-sm sm:hidden">
+                      <span className={currentTheme.secondaryText}>
+                        {tip.plantType}
+                      </span>
+                      <span className={`mx-2 ${currentTheme.secondaryText}`}>
+                        •
+                      </span>
+                      <span
+                        className={`text-xs font-semibold ${
+                          tip.difficulty === "Easy"
+                            ? theme === "dark"
+                              ? "text-green-400"
+                              : "text-green-600"
+                            : tip.difficulty === "Medium"
+                            ? theme === "dark"
+                              ? "text-yellow-400"
+                              : "text-yellow-600"
+                            : theme === "dark"
+                            ? "text-red-400"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {tip.difficulty}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {tip.plantType}
+                  <td className="px-4 py-4 whitespace-nowrap text-sm hidden sm:table-cell">
+                    <span className={currentTheme.secondaryText}>
+                      {tip.plantType}
+                    </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {tip.category}
+                  <td className="px-4 py-4 whitespace-nowrap text-sm hidden md:table-cell">
+                    <span className={currentTheme.secondaryText}>
+                      {tip.category}
+                    </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-4 whitespace-nowrap hidden sm:table-cell">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                       ${
                         tip.difficulty === "Easy"
-                          ? "bg-green-100 text-green-800"
+                          ? theme === "dark"
+                            ? "bg-green-900 text-green-300"
+                            : "bg-green-100 text-green-800"
                           : tip.difficulty === "Medium"
-                          ? "bg-yellow-100 text-yellow-800"
+                          ? theme === "dark"
+                            ? "bg-yellow-900 text-yellow-300"
+                            : "bg-yellow-100 text-yellow-800"
+                          : theme === "dark"
+                          ? "bg-red-900 text-red-300"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
                       {tip.difficulty}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => handleViewDetails(tip._id)}
-                      className="text-green-600 hover:text-green-900 flex items-center"
+                      className={`flex items-center cursor-pointer ${currentTheme.button}`}
                     >
-                      <FaEye className="mr-1" /> View Details
+                      <FaEye className="mr-1" />
+                      <span className="hidden sm:inline">View Details</span>
                     </button>
                   </td>
                 </tr>
