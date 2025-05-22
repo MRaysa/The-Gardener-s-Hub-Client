@@ -1,10 +1,12 @@
 import React, { use, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { FaArrowLeft, FaSave, FaSpinner } from "react-icons/fa";
+import { FaArrowLeft, FaSave, FaSpinner, FaSeedling } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
 
 const UpdateTipPage = () => {
+  const { theme } = useTheme();
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = use(AuthContext);
@@ -56,6 +58,8 @@ const UpdateTipPage = () => {
           text: err.message,
           icon: "error",
           confirmButtonText: "OK",
+          background: theme === "dark" ? "#1f2937" : "#ffffff",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         });
         navigate("/mytips");
       } finally {
@@ -64,7 +68,7 @@ const UpdateTipPage = () => {
     };
 
     fetchTip();
-  }, [id, navigate]);
+  }, [id, navigate, theme]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,6 +103,8 @@ const UpdateTipPage = () => {
           text: "Tip updated successfully!",
           icon: "success",
           confirmButtonText: "OK",
+          background: theme === "dark" ? "#1f2937" : "#ffffff",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         }).then(() => {
           navigate("/my-tips");
         });
@@ -111,6 +117,8 @@ const UpdateTipPage = () => {
         text: error.message,
         icon: "error",
         confirmButtonText: "OK",
+        background: theme === "dark" ? "#1f2937" : "#ffffff",
+        color: theme === "dark" ? "#ffffff" : "#000000",
       });
     } finally {
       setIsSubmitting(false);
@@ -119,52 +127,94 @@ const UpdateTipPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+      <div
+        className={`flex justify-center items-center h-64 ${
+          theme === "dark" ? "bg-gray-800" : ""
+        }`}
+      >
+        <div
+          className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
+            theme === "dark" ? "border-green-400" : "border-green-500"
+          }`}
+        ></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-green-50 shadow rounded-md mt-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-green-800">Update Your Tip</h1>
+    <div
+      className={`max-w-2xl mx-auto p-4 md:p-6 shadow rounded-md my-6 ${
+        theme === "dark" ? "bg-gray-800" : "bg-green-50"
+      }`}
+    >
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+        <h1
+          className={`text-2xl md:text-3xl font-bold ${
+            theme === "dark" ? "text-green-300" : "text-green-800"
+          }`}
+        >
+          <FaSeedling className="mr-2" /> Update Your Gardening Tip
+        </h1>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-green-600 hover:text-green-800"
+          className={`flex items-center ${
+            theme === "dark"
+              ? "text-green-400 hover:text-green-300"
+              : "text-green-600 hover:text-green-800"
+          }`}
         >
           <FaArrowLeft className="mr-1" /> Back
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              className={`block text-sm font-medium mb-1 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
               Name
             </label>
             <input
               type="text"
               value={formData.name}
               readOnly
-              className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+              className={`w-full px-3 py-2 rounded cursor-not-allowed ${
+                theme === "dark"
+                  ? "bg-gray-700 border-gray-600 text-gray-300"
+                  : "bg-gray-100 border"
+              }`}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              className={`block text-sm font-medium mb-1 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
               Email
             </label>
             <input
               type="email"
               value={formData.email}
               readOnly
-              className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+              className={`w-full px-3 py-2 rounded cursor-not-allowed ${
+                theme === "dark"
+                  ? "bg-gray-700 border-gray-600 text-gray-300"
+                  : "bg-gray-100 border"
+              }`}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            className={`block text-sm font-medium mb-1 ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             Title
           </label>
           <input
@@ -173,13 +223,21 @@ const UpdateTipPage = () => {
             placeholder="Title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+              theme === "dark"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                : "border focus:ring-green-500"
+            }`}
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            className={`block text-sm font-medium mb-1 ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             Plant Type
           </label>
           <input
@@ -188,20 +246,32 @@ const UpdateTipPage = () => {
             placeholder="Plant Type"
             value={formData.plantType}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+              theme === "dark"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                : "border focus:ring-green-500"
+            }`}
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            className={`block text-sm font-medium mb-1 ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             Difficulty
           </label>
           <select
             name="difficulty"
             value={formData.difficulty}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+              theme === "dark"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                : "border focus:ring-green-500"
+            }`}
           >
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
@@ -210,7 +280,11 @@ const UpdateTipPage = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            className={`block text-sm font-medium mb-1 ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             Description
           </label>
           <textarea
@@ -218,14 +292,22 @@ const UpdateTipPage = () => {
             placeholder="Description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+              theme === "dark"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                : "border focus:ring-green-500"
+            }`}
             rows="4"
             required
           ></textarea>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            className={`block text-sm font-medium mb-1 ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             Image URL
           </label>
           <input
@@ -234,20 +316,32 @@ const UpdateTipPage = () => {
             placeholder="Image URL"
             value={formData.imageUrl}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+              theme === "dark"
+                ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                : "border focus:ring-green-500"
+            }`}
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              className={`block text-sm font-medium mb-1 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
               Category
             </label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+                theme === "dark"
+                  ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                  : "border focus:ring-green-500"
+              }`}
             >
               <option value="Composting">Composting</option>
               <option value="Plant Care">Plant Care</option>
@@ -257,14 +351,22 @@ const UpdateTipPage = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              className={`block text-sm font-medium mb-1 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
               Visibility
             </label>
             <select
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className={`w-full px-3 py-2 rounded focus:ring-2 focus:border-transparent ${
+                theme === "dark"
+                  ? "bg-gray-700 border-gray-600 text-white focus:ring-green-400"
+                  : "border focus:ring-green-500"
+              }`}
             >
               <option value="Public">Public</option>
               <option value="Hidden">Hidden</option>
@@ -275,8 +377,12 @@ const UpdateTipPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 flex items-center justify-center ${
+          className={`w-full py-2 rounded flex items-center justify-center ${
             isSubmitting ? "opacity-75" : ""
+          } ${
+            theme === "dark"
+              ? "bg-green-600 hover:bg-green-500 text-white"
+              : "bg-green-600 hover:bg-green-700 text-white"
           }`}
         >
           {isSubmitting ? (
