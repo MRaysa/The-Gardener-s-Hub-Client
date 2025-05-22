@@ -25,7 +25,7 @@
 - ❤️ **Like Tips**: Each tip can be liked and the like count is updated in real-time in the DB.
 - 💬 **Private Routes**: Tips sharing, personal tips management, and tip details are protected routes.
 - 🛠️ **Responsive Design**: Fully responsive across mobile, desktop, and tablet devices.
-- 🎨 **UI Enhancements**: Smooth animations using **React Awesome Reveal** .
+- 🎨 **UI Enhancements**: Smooth animations using **React Awesome Reveal** also use **React ToolTip**.
 
 ---
 
