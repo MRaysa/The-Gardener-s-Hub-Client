@@ -10,6 +10,7 @@ import {
   FaLeaf,
   FaThumbsUp,
 } from "react-icons/fa";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const TopTreandingTips = () => {
   const [trendingTips, setTrendingTips] = useState([]);

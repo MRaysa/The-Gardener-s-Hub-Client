@@ -114,7 +114,7 @@ const ActiveGardeners = () => {
 
   return (
     <div
-      className={`min-h-screen ${currentTheme.bg} py-16 px-4 sm:px-6 lg:px-8`}
+      className={`min-h-screen ${currentTheme.bg} py-16 px-4 sm:px-6 lg:px-8 m-8 rounded-2xl`}
     >
       <div className="max-w-8xl mx-auto">
         {/* Header with animated text */}
