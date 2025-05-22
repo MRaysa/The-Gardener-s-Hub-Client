@@ -43,25 +43,25 @@ const PlantDoctor = () => {
       title: "Overwatering",
       solution:
         "Reduce watering frequency and ensure proper drainage. Let soil dry between waterings.",
-      image: "https://i.ibb.co/0nS3X4k/overwater.jpg",
+      image: "https://i.ibb.co/pjVd55V6/r.jpg",
     },
     underwater: {
       title: "Underwatering",
       solution:
         "Water more frequently and thoroughly until water drains from the bottom. Consider self-watering pots.",
-      image: "https://i.ibb.co/0jQ7J0X/underwater.jpg",
+      image: "https://i.ibb.co/1fDrdjjd/www.jpg",
     },
     fungus: {
       title: "Fungal Infection",
       solution:
         "Remove affected leaves, improve air circulation, and apply organic fungicide like neem oil.",
-      image: "https://i.ibb.co/5KqY2bN/fungus.jpg",
+      image: "https://i.ibb.co/hJBwTwmh/ne.jpg",
     },
     light: {
       title: "Incorrect Lighting",
       solution:
         "Move plant to better suited location based on its light requirements. Consider grow lights if needed.",
-      image: "https://i.ibb.co/0nS3X4k/lighting.jpg",
+      image: "https://i.ibb.co/Vp5SYB9s/l.webp",
     },
   };
 
