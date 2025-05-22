@@ -151,7 +151,7 @@ const SignUp = () => {
           title: "Your account has been created successfully!",
           timer: 1500,
           toast: true,
-          position: "top-end",
+          // position: "top-end",
           showConfirmButton: false,
           background: "#0f172a",
           color: "#ffffff",
