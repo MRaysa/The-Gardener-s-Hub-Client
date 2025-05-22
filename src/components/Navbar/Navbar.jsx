@@ -122,7 +122,7 @@ const Navbar = () => {
               <div className="relative ml-3">
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300 focus:outline-none"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition duration-300 focus:outline-none"
                 >
                   {user.photoURL ? (
                     <img
@@ -132,7 +132,7 @@ const Navbar = () => {
                       onError={handleImageError}
                     />
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-white text-indigo-600 flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-full bg-white text-green-600 flex items-center justify-center">
                       <FaUser />
                     </div>
                   )}
