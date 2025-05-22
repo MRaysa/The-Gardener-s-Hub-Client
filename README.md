@@ -25,7 +25,7 @@
 - ❤️ **Like Tips**: Each tip can be liked and the like count is updated in real-time in the DB.
 - 💬 **Private Routes**: Tips sharing, personal tips management, and tip details are protected routes.
 - 🛠️ **Responsive Design**: Fully responsive across mobile, desktop, and tablet devices.
-- 🎨 **UI Enhancements**: Smooth animations using **React Awesome Reveal** and **Lottie React**.
+- 🎨 **UI Enhancements**: Smooth animations using **React Awesome Reveal** .
 
 ---
 
@@ -36,7 +36,7 @@
 ### 🧩 Frontend (Client)
 
 - **React.js** – JavaScript library for building user interfaces.
-- **React Router ** – Handles dynamic routing in the SPA.
+- **React Router** – Handles dynamic routing in the SPA.
 - **Tailwind CSS** – Utility-first CSS framework for rapid UI development.
 - **DaisyUI** – Tailwind CSS components for enhanced UI design.
 - **Firebase Authentication** – Secure and scalable user authentication.
