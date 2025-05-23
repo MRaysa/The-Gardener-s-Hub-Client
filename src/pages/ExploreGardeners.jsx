@@ -99,8 +99,88 @@ const ExploreGardeners = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+      <div
+        className={`flex flex-col justify-center items-center h-screen ${currentTheme.bg} gap-4`}
+      >
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            rotate: {
+              repeat: Infinity,
+              duration: 1.5,
+              ease: "linear",
+            },
+            scale: {
+              repeat: Infinity,
+              duration: 1.5,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            },
+          }}
+          className={`relative h-16 w-16 rounded-full border-4 ${
+            theme === "dark" ? "border-green-400/30" : "border-green-600/30"
+          }`}
+        >
+          <motion.div
+            className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 rounded-full ${
+              theme === "dark" ? "bg-green-400" : "bg-green-600"
+            }`}
+            animate={{
+              y: [0, 40, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0.5, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "reverse",
+            duration: 1.5,
+          }}
+          className={`text-lg font-medium ${
+            theme === "dark" ? "text-green-300" : "text-green-700"
+          }`}
+        >
+          Cultivating connections...
+        </motion.div>
+
+        <motion.div
+          className="flex gap-1"
+          animate={{
+            opacity: [0.3, 1, 0.3],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+          }}
+        >
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={`h-2 w-2 rounded-full ${
+                theme === "dark" ? "bg-green-400" : "bg-green-600"
+              }`}
+              animate={{
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          ))}
+        </motion.div>
       </div>
     );
   }
