@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaGoogle,
@@ -11,14 +10,20 @@ import {
   FaImage,
   FaPhone,
   FaMapMarkerAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { useNavigate, NavLink, useLocation } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useTheme } from "../contexts/ThemeContext";
+
+const MySwal = withReactContent(Swal);
 
 const SignUp = () => {
   const { createUser, googleSignIn, updateUser, loading } =
     useContext(AuthContext);
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [formData, setFormData] = useState({
@@ -35,9 +40,118 @@ const SignUp = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [useImageUrl, setUseImageUrl] = useState(false);
 
-  // Password must be at least 8 characters with lowercase, uppercase, and special character
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
   const phoneRegex = /^[0-9]{10,15}$/;
+
+  const showSuccessAlert = (user, isGoogle = false) => {
+    MySwal.fire({
+      title: (
+        <div className="flex flex-col items-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4"
+          >
+            <FaCheckCircle className="text-green-600 dark:text-green-300 text-4xl" />
+          </motion.div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            Welcome {user.displayName || user.name}!
+          </h2>
+        </div>
+      ),
+      html: (
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            Your account has been created successfully
+            {isGoogle && " with Google"}
+          </p>
+          {user.photoURL && (
+            <motion.img
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              src={user.photoURL}
+              alt="Profile"
+              className="w-16 h-16 rounded-full mx-auto mb-4 border-2 border-green-400"
+            />
+          )}
+          <div className="bg-green-50 dark:bg-gray-700 rounded-lg p-3 mb-4">
+            <p className="text-green-700 dark:text-green-300 font-medium">
+              {user.email}
+            </p>
+          </div>
+          <motion.div
+            animate={{ y: [0, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="text-sm text-green-600 dark:text-green-400"
+          >
+            Ready to explore!
+          </motion.div>
+        </div>
+      ),
+      showConfirmButton: true,
+      confirmButtonText: "Continue",
+      confirmButtonColor: "#10b981",
+      background: theme === "dark" ? "#1f2937" : "#ffffff",
+    }).then(() => {
+      navigate(location?.state || "/");
+    });
+  };
+
+  const showGoogleWelcome = (user) => {
+    MySwal.fire({
+      title: (
+        <div className="flex flex-col items-center">
+          <div className="relative w-24 h-24 mb-4">
+            <motion.div
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              className="w-full h-full bg-white rounded-full shadow-lg flex items-center justify-center"
+            >
+              <FaGoogle className="text-red-500 text-4xl" />
+            </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="absolute -bottom-2 -right-2 bg-green-100 dark:bg-green-800 rounded-full p-2"
+            >
+              <FaUser className="text-green-600 dark:text-green-300 text-xl" />
+            </motion.div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            Google Sign In Successful!
+          </h2>
+        </div>
+      ),
+      html: (
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            Welcome back, {user.displayName}!
+          </p>
+          {user.photoURL && (
+            <img
+              src={user.photoURL}
+              alt="Profile"
+              className="w-16 h-16 rounded-full mx-auto mb-4 border-2 border-green-400"
+            />
+          )}
+          <div className="bg-blue-50 dark:bg-gray-700 rounded-lg p-3 mb-4">
+            <p className="text-blue-700 dark:text-blue-300 font-medium">
+              {user.email}
+            </p>
+          </div>
+        </div>
+      ),
+      showConfirmButton: true,
+      confirmButtonText: "Let's Go!",
+      confirmButtonColor: "#10b981",
+      background: theme === "dark" ? "#1f2937" : "#ffffff",
+    }).then(() => {
+      navigate(location?.state || "/");
+    });
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -102,7 +216,7 @@ const SignUp = () => {
   const saveUserToDatabase = async (userProfile) => {
     try {
       const response = await fetch(
-        "https://the-gardener-s-hub-server.vercel.app/users ",
+        "https://the-gardener-s-hub-server.vercel.app/users",
         {
           method: "POST",
           headers: {
@@ -146,18 +260,11 @@ const SignUp = () => {
 
       const dbResponse = await saveUserToDatabase(userProfile);
       if (dbResponse.insertedId) {
-        Swal.fire({
-          icon: "success",
-          title: "Your account has been created successfully!",
-          timer: 1500,
-          toast: true,
-
-          showConfirmButton: false,
-          background: "#0f172a",
-          color: "#ffffff",
-          iconColor: "#10b981",
+        showSuccessAlert({
+          name: formData.name,
+          email: formData.email,
+          photoURL: formData.photoURL,
         });
-        navigate(location?.state || "/");
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -181,19 +288,27 @@ const SignUp = () => {
       };
 
       await saveUserToDatabase(userProfile);
-      navigate(location?.state || "/");
+      showGoogleWelcome(user);
     } catch (error) {
       setErrors({ firebase: error.message });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-teal-50 p-4 dark:bg-gray-900">
+    <div
+      className={`min-h-screen flex items-center justify-center p-4 ${
+        theme === "dark"
+          ? "bg-gray-800"
+          : "bg-gradient-to-br from-green-50 to-teal-50"
+      }`}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden dark:bg-gray-800"
+        className={`w-full max-w-md rounded-xl shadow-2xl overflow-hidden ${
+          theme === "dark" ? "bg-gray-800" : "bg-white"
+        }`}
       >
         {/* Header */}
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6 text-center">
@@ -204,7 +319,13 @@ const SignUp = () => {
         {/* Error Message */}
         {errors.firebase && (
           <div className="px-8 pt-6">
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 dark:bg-red-900 dark:text-red-100">
+            <div
+              className={`${
+                theme === "dark"
+                  ? "bg-red-900 text-red-100"
+                  : "bg-red-100 text-red-700"
+              } border-l-4 border-red-500 p-4`}
+            >
               <p>{errors.firebase}</p>
             </div>
           </div>
@@ -214,7 +335,11 @@ const SignUp = () => {
           {/* Profile Picture Section */}
           <div className="flex flex-col items-center space-y-2">
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-2 border-green-100">
+              <div
+                className={`w-24 h-24 rounded-full flex items-center justify-center overflow-hidden border-2 ${
+                  theme === "dark" ? "border-gray-600" : "border-green-100"
+                }`}
+              >
                 {imagePreview ? (
                   <img
                     src={imagePreview}
@@ -234,11 +359,15 @@ const SignUp = () => {
                   name="image-option"
                   checked={!useImageUrl}
                   onChange={() => setUseImageUrl(false)}
-                  className="mr-2 text-green-600"
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-600"
+                  }`}
                 />
                 <label
                   htmlFor="upload-option"
-                  className="text-sm text-gray-700 dark:text-gray-300"
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
                 >
                   Upload Image
                 </label>
@@ -250,12 +379,13 @@ const SignUp = () => {
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-md file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-green-50 file:text-green-700
-                      hover:file:bg-green-100"
+                    className={`block w-full text-sm ${
+                      theme === "dark" ? "text-gray-300" : "text-gray-500"
+                    } file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold ${
+                      theme === "dark"
+                        ? "file:bg-gray-700 file:text-green-300 hover:file:bg-gray-600"
+                        : "file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                    }`}
                   />
                 </label>
               )}
@@ -267,11 +397,15 @@ const SignUp = () => {
                   name="image-option"
                   checked={useImageUrl}
                   onChange={() => setUseImageUrl(true)}
-                  className="mr-2 text-green-600"
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-600"
+                  }`}
                 />
                 <label
                   htmlFor="url-option"
-                  className="text-sm text-gray-700 dark:text-gray-300"
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
                 >
                   Use Image URL
                 </label>
@@ -283,10 +417,18 @@ const SignUp = () => {
                     name="photoURL"
                     value={formData.photoURL}
                     onChange={handleImageUrlChange}
-                    placeholder="https://example.com/image.jpg "
+                    placeholder="https://example.com/image.jpg"
                     className={`w-full px-3 py-2 border ${
-                      errors.photoURL ? "border-red-500" : "border-gray-300"
-                    } rounded-md text-sm shadow-sm placeholder:text-gray-400 text-white`}
+                      errors.photoURL
+                        ? "border-red-500"
+                        : theme === "dark"
+                        ? "border-gray-600"
+                        : "border-gray-300"
+                    } rounded-md text-sm shadow-sm placeholder:text-gray-400 ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-gray-900"
+                    }`}
                   />
                   {errors.photoURL && (
                     <p className="text-red-500 text-xs mt-1">
@@ -302,7 +444,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="name"
-              className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
+              className={`flex items-center text-sm font-medium ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
             >
               <FaUser className="mr-2 text-green-500" />
               Full Name
@@ -314,8 +458,16 @@ const SignUp = () => {
               value={formData.name}
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
+                errors.name
+                  ? "border-red-500"
+                  : theme === "dark"
+                  ? "border-gray-600"
+                  : "border-gray-300"
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-900"
+              }`}
               placeholder="John Doe"
               required
             />
@@ -328,7 +480,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="email"
-              className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
+              className={`flex items-center text-sm font-medium ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
             >
               <FaEnvelope className="mr-2 text-green-500" />
               Email Address
@@ -340,8 +494,16 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
+                errors.email
+                  ? "border-red-500"
+                  : theme === "dark"
+                  ? "border-gray-600"
+                  : "border-gray-300"
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-900"
+              }`}
               placeholder="your@email.com"
               required
             />
@@ -354,7 +516,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="password"
-              className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
+              className={`flex items-center text-sm font-medium ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
             >
               <FaLock className="mr-2 text-green-500" />
               Password
@@ -367,8 +531,16 @@ const SignUp = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full px-4 py-2 border ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
+                  errors.password
+                    ? "border-red-500"
+                    : theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+                } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white"
+                    : "bg-white text-gray-900"
+                }`}
                 placeholder="••••••••"
                 required
               />
@@ -378,16 +550,28 @@ const SignUp = () => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <FaEyeSlash className="text-gray-500" />
+                  <FaEyeSlash
+                    className={
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }
+                  />
                 ) : (
-                  <FaEye className="text-gray-500" />
+                  <FaEye
+                    className={
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }
+                  />
                 )}
               </button>
             </div>
             {errors.password ? (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             ) : (
-              <p className="text-green-500 text-xs mt-1">
+              <p
+                className={`text-xs mt-1 ${
+                  theme === "dark" ? "text-green-400" : "text-green-500"
+                }`}
+              >
                 Must be at least 8 characters with uppercase, lowercase, and
                 special character
               </p>
@@ -398,7 +582,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="phone"
-              className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
+              className={`flex items-center text-sm font-medium ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
             >
               <FaPhone className="mr-2 text-green-500" />
               Phone Number
@@ -410,8 +596,16 @@ const SignUp = () => {
               value={formData.phone}
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
-                errors.phone ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white`}
+                errors.phone
+                  ? "border-red-500"
+                  : theme === "dark"
+                  ? "border-gray-600"
+                  : "border-gray-300"
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-900"
+              }`}
               placeholder="1234567890"
             />
             {errors.phone && (
@@ -423,7 +617,9 @@ const SignUp = () => {
           <div className="space-y-1">
             <label
               htmlFor="address"
-              className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
+              className={`flex items-center text-sm font-medium ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
             >
               <FaMapMarkerAlt className="mr-2 text-green-500" />
               Address
@@ -433,7 +629,13 @@ const SignUp = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 text-white"
+              className={`w-full px-4 py-2 border ${
+                theme === "dark" ? "border-gray-600" : "border-gray-300"
+              } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors placeholder:text-gray-400 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-900"
+              }`}
               placeholder="123 Main St, City, Country"
               rows="2"
             />
@@ -455,10 +657,20 @@ const SignUp = () => {
           {/* Divider */}
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div
+                className={`w-full border-t ${
+                  theme === "dark" ? "border-gray-600" : "border-gray-300"
+                }`}
+              ></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+              <span
+                className={`px-2 ${
+                  theme === "dark"
+                    ? "bg-gray-800 text-gray-400"
+                    : "bg-white text-gray-500"
+                }`}
+              >
                 Or sign up with
               </span>
             </div>
@@ -470,7 +682,11 @@ const SignUp = () => {
               whileHover={{ y: -2 }}
               type="button"
               onClick={handleGoogleRegister}
-              className="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+              className={`flex items-center justify-center py-2 px-4 rounded-lg transition ${
+                theme === "dark"
+                  ? "border-gray-600 bg-gray-700 hover:bg-gray-600"
+                  : "border-gray-300 bg-white hover:bg-gray-50"
+              }`}
             >
               <FaGoogle className="text-red-500 mr-2" />
               <span>Google</span>
@@ -479,15 +695,27 @@ const SignUp = () => {
         </form>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-8 py-4 text-center dark:bg-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+        <div
+          className={`px-8 py-4 text-center ${
+            theme === "dark" ? "bg-gray-700" : "bg-gray-50"
+          }`}
+        >
+          <p
+            className={`text-sm ${
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
             Already have an account?{" "}
             <NavLink
               to="/signin"
               className={({ isActive }) =>
                 isActive
                   ? "font-medium text-green-700 underline"
-                  : "font-medium text-green-600 hover:text-green-500"
+                  : `font-medium ${
+                      theme === "dark"
+                        ? "text-green-400 hover:text-green-300"
+                        : "text-green-600 hover:text-green-500"
+                    }`
               }
             >
               Sign in
