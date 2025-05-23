@@ -125,7 +125,6 @@ const SignIn = () => {
       }
 
       await Swal.fire({
-        position: "top-end",
         icon: "success",
         title: "Signed in with Google",
         showConfirmButton: false,
