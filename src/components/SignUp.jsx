@@ -682,14 +682,14 @@ const SignUp = () => {
               whileHover={{ y: -2 }}
               type="button"
               onClick={handleGoogleRegister}
-              className={`flex items-center justify-center py-2 px-4 rounded-lg transition ${
+              className={`flex items-center cursor-pointer justify-center py-2 px-4 rounded-lg transition ${
                 theme === "dark"
-                  ? "border-gray-600 bg-gray-700 hover:bg-gray-600"
-                  : "border-gray-300 bg-white hover:bg-gray-50"
+                  ? "border border-gray-600 bg-gray-700 hover:bg-gray-600"
+                  : "border border-green-300 bg-white hover:bg-gray-50"
               }`}
             >
               <FaGoogle className="text-red-500 mr-2" />
-              <span>Google</span>
+              <span>Login With Google</span>
             </motion.button>
           </div>
         </form>
