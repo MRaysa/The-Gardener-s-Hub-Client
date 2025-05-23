@@ -17,6 +17,7 @@ import {
   FaPenAlt,
 } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
+import { Tooltip } from "react-tooltip";
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
@@ -135,22 +136,21 @@ const Navbar = () => {
               {theme === "light" ? <FaMoon /> : <FaSun />}
             </button>
 
-            {/* User Profile - Hidden on medium screens when menu is open */}
+            {/* User Profile -  visible on all devices */}
             {user ? (
-              <div
-                className={`relative ${
-                  mobileMenuOpen ? "hidden md:block" : ""
-                }`}
-              >
+              <div className="relative">
                 <button
+                  id="user-profile-tooltip"
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center space-x-1 focus:outline-none"
+                  className="flex items-center space-x-1 focus:outline-none cursor-pointer"
+                  data-tooltip-content={user.displayName || "User"}
+                  data-tooltip-place="bottom"
                 >
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
                       alt="Profile"
-                      className="h-8 w-8 rounded-full object-cover border-2 border-white"
+                      className="h-8 w-8 rounded-full object-cover border-2 border-white hover:opacity-90 transition-opacity"
                       onError={handleImageError}
                     />
                   ) : (
@@ -159,12 +159,27 @@ const Navbar = () => {
                         theme === "dark"
                           ? "bg-gray-700 text-green-400"
                           : "bg-green-700 text-white"
-                      }`}
+                      } hover:opacity-90 transition-opacity cursor-pointer`}
                     >
                       <FaUser />
                     </div>
                   )}
                 </button>
+
+                {/* React Tooltip */}
+                <Tooltip
+                  anchorId="user-profile-tooltip"
+                  className="z-50"
+                  classNameArrow="!bottom-[-4px]"
+                  style={{
+                    backgroundColor: theme === "dark" ? "#374151" : "#047857",
+                    color: theme === "dark" ? "#f3f4f6" : "#ffffff",
+                    borderRadius: "0.375rem",
+                    padding: "0.25rem 0.5rem",
+                    fontSize: "0.875rem",
+                    lineHeight: "1.25rem",
+                  }}
+                />
 
                 {profileDropdownOpen && (
                   <motion.div
@@ -240,7 +255,7 @@ const Navbar = () => {
             {/* Mobile menu button - Shows on md and smaller screens */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-md ${hoverText} focus:outline-none`}
+              className={`lg:hidden p-2 rounded-md ${hoverText} focus:outline-none cursor-pointer`}
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -283,7 +298,7 @@ const Navbar = () => {
                       <img
                         src={user.photoURL}
                         alt="Profile"
-                        className="h-8 w-8 rounded-full object-cover mr-3"
+                        className="h-8 w-8 rounded-full object-cover mr-3 cursor-pointer"
                         onError={handleImageError}
                       />
                     ) : (
@@ -292,7 +307,7 @@ const Navbar = () => {
                           theme === "dark"
                             ? "bg-gray-700 text-green-400"
                             : "bg-green-600 text-white"
-                        }`}
+                        } cursor-pointer`}
                       >
                         <FaUser />
                       </div>
@@ -312,7 +327,7 @@ const Navbar = () => {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className={`flex items-center w-full px-3 py-2 rounded-md text-base font-medium ${hoverText}`}
+                    className={`flex items-center w-full px-3 py-2 rounded-md text-base font-medium ${hoverText} cursor-pointer`}
                   >
                     <FaSignOutAlt className="mr-2" />
                     Sign Out
@@ -328,7 +343,7 @@ const Navbar = () => {
                         isActive
                           ? `${activeLinkBg} ${activeLinkText}`
                           : hoverText
-                      }`
+                      } cursor-pointer`
                     }
                   >
                     <FaSignInAlt className="mr-2" />
@@ -344,7 +359,7 @@ const Navbar = () => {
                           : theme === "dark"
                           ? "bg-green-700 hover:bg-green-600"
                           : "bg-green-600 hover:bg-green-700"
-                      } text-white`
+                      } text-white cursor-pointer`
                     }
                   >
                     <FaUserPlus className="mr-2" />

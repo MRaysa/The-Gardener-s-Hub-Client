@@ -60,7 +60,7 @@ const Slider = () => {
       button: "bg-white text-purple-600 hover:bg-purple-100",
     },
     dark: {
-      bg: "bg-gradient-to-br from-gray-900 to-gray-800",
+      bg: "bg-gradient-to-br from-gray-800 to-gray-800",
       text: "text-white",
       secondaryText: "text-gray-300",
       button: "bg-green-600 text-white hover:bg-green-700",
@@ -74,7 +74,7 @@ const Slider = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className={`relative rounded-3xl overflow-hidden shadow-2xl m-4 md:m-8 ${currentTheme.bg}`}
+      className={`relative  overflow-hidden shadow-2xl  ${currentTheme.bg}`}
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-20">

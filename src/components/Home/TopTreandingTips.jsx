@@ -29,7 +29,7 @@ const TopTrendingTips = () => {
       button: "bg-green-600 hover:bg-green-700 text-white",
     },
     dark: {
-      bg: "bg-gray-900",
+      bg: "bg-gray-800",
       text: "text-gray-100",
       secondaryText: "text-gray-300",
       card: "bg-gray-800",
@@ -98,7 +98,7 @@ const TopTrendingTips = () => {
 
   return (
     <div
-      className={`min-h-screen py-16 px-4 sm:px-6 lg:px-8 m-8 rounded-2xl ${currentTheme.bg}`}
+      className={`min-h-screen py-16 px-4 sm:px-6 lg:px-8  ${currentTheme.bg}`}
     >
       {/* Hero Section */}
       <motion.div

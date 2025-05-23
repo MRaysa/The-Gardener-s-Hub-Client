@@ -108,7 +108,7 @@ const SeasonalGuide = () => {
       buttonInactive: "bg-white text-green-800 hover:bg-green-100",
     },
     dark: {
-      bg: "bg-gradient-to-b from-gray-900 to-gray-800",
+      bg: "bg-gradient-to-b from-gray-800 to-gray-800",
       text: "text-gray-100",
       card: "bg-gray-700",
       secondaryText: "text-gray-300",
@@ -124,7 +124,7 @@ const SeasonalGuide = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`py-16 px-4 m-8 rounded-2xl ${currentTheme.bg}`}
+      className={`py-16 px-4  ${currentTheme.bg}`}
     >
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">

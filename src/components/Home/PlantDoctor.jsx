@@ -169,9 +169,7 @@ const PlantDoctor = () => {
 
   return (
     <section
-      className={`py-16 px-4 ${
-        theme === "dark" ? "bg-gray-800" : "bg-white"
-      } md:m-8 rounded-2xl`}
+      className={`py-16 px-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"} `}
     >
       <div className="container mx-auto max-w-4xl">
         <motion.div
