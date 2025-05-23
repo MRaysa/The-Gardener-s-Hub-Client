@@ -209,58 +209,63 @@ const TipDetailsPage = () => {
 
   return (
     <div
-      className={`container mx-auto px-4 py-8 max-w-4xl my-4 rounded-2xl ${
-        theme === "dark" ? "bg-gray-800 text-gray-100" : ""
+      className={`min-h-screen md:py-12 md:px-8  lg:px-16 mx-auto p-6 shadow   ${
+        theme === "dark" ? "bg-gray-800" : "bg-green-50"
       }`}
     >
-      <button
-        onClick={handleBack}
-        className={`flex items-center ${
-          theme === "dark"
-            ? "text-green-400 hover:text-green-300"
-            : "text-green-600 hover:text-green-800"
-        } mb-6 transition-colors`}
-      >
-        <FaArrowLeft className="mr-2" /> Back to Tips
-      </button>
-
       <div
-        className={`rounded-lg shadow-lg overflow-hidden ${
-          theme === "dark" ? "bg-gray-700" : "bg-white"
+        className={`container mx-auto px-4 py-8 max-w-4xl my-4 rounded-2xl ${
+          theme === "dark" ? "bg-gray-900 text-gray-100" : ""
         }`}
       >
-        {tip.imageUrl && (
-          <img
-            src={tip.imageUrl}
-            alt={tip.title}
-            className="w-full h-64 md:h-96 object-cover"
-          />
-        )}
+        <button
+          onClick={handleBack}
+          className={`flex items-center ${
+            theme === "dark"
+              ? "text-green-400 hover:text-green-300"
+              : "text-green-600 hover:text-green-800"
+          } mb-6 transition-colors`}
+        >
+          <FaArrowLeft className="mr-2" /> Back to Tips
+        </button>
 
-        <div className="p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6">
-            <div>
-              <h1
-                className={`text-2xl md:text-3xl font-bold mb-2 ${
-                  theme === "dark" ? "text-white" : "text-gray-800"
-                }`}
-              >
-                {tip.title}
-              </h1>
-              <p
-                className={
-                  theme === "dark"
-                    ? "text-gray-300 italic"
-                    : "text-gray-600 italic"
-                }
-              >
-                {tip.plantType}
-              </p>
-            </div>
+        <div
+          className={`rounded-lg shadow-lg overflow-hidden ${
+            theme === "dark" ? "bg-gray-700" : "bg-white"
+          }`}
+        >
+          {tip.imageUrl && (
+            <img
+              src={tip.imageUrl}
+              alt={tip.title}
+              className="w-full h-64 md:h-96 object-cover"
+            />
+          )}
 
-            <div className="mt-4 md:mt-0 flex items-center space-x-4">
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium
+          <div className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6">
+              <div>
+                <h1
+                  className={`text-2xl md:text-3xl font-bold mb-2 ${
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  }`}
+                >
+                  {tip.title}
+                </h1>
+                <p
+                  className={
+                    theme === "dark"
+                      ? "text-gray-300 italic"
+                      : "text-gray-600 italic"
+                  }
+                >
+                  {tip.plantType}
+                </p>
+              </div>
+
+              <div className="mt-4 md:mt-0 flex items-center space-x-4">
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium
                 ${
                   tip.difficulty === "Easy"
                     ? theme === "dark"
@@ -274,50 +279,50 @@ const TipDetailsPage = () => {
                     ? "bg-red-900 text-red-200"
                     : "bg-red-100 text-red-800"
                 }`}
-              >
-                {tip.difficulty}
-              </span>
+                >
+                  {tip.difficulty}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div
-            className={`flex flex-wrap gap-4 mb-6 text-sm ${
-              theme === "dark" ? "text-gray-300" : "text-gray-600"
-            }`}
-          >
-            <div className="flex items-center">
-              <FaSeedling
-                className={`mr-2 ${
-                  theme === "dark" ? "text-green-400" : "text-green-500"
-                }`}
-              />
-              <span>{tip.category}</span>
+            <div
+              className={`flex flex-wrap gap-4 mb-6 text-sm ${
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              <div className="flex items-center">
+                <FaSeedling
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-500"
+                  }`}
+                />
+                <span>{tip.category}</span>
+              </div>
+              <div className="flex items-center">
+                <FaUser
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-500"
+                  }`}
+                />
+                <span>By {tip.name}</span>
+              </div>
+              <div className="flex items-center">
+                <FaClock
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-500"
+                  }`}
+                />
+                <span>
+                  Posted on {new Date(tip.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center">
-              <FaUser
-                className={`mr-2 ${
-                  theme === "dark" ? "text-green-400" : "text-green-500"
-                }`}
-              />
-              <span>By {tip.name}</span>
-            </div>
-            <div className="flex items-center">
-              <FaClock
-                className={`mr-2 ${
-                  theme === "dark" ? "text-green-400" : "text-green-500"
-                }`}
-              />
-              <span>
-                Posted on {new Date(tip.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-          </div>
 
-          <div className="flex items-center mb-8">
-            <button
-              onClick={handleLike}
-              disabled={isLiked}
-              className={`flex items-center px-4 py-2 rounded-lg mr-4 transition-colors
+            <div className="flex items-center mb-8">
+              <button
+                onClick={handleLike}
+                disabled={isLiked}
+                className={`flex items-center px-4 py-2 rounded-lg mr-4 transition-colors
                 ${
                   isLiked
                     ? theme === "dark"
@@ -327,49 +332,52 @@ const TipDetailsPage = () => {
                     ? "bg-gray-600 hover:bg-gray-500 text-gray-100"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                 }`}
-            >
-              <FaHeart
-                className={`mr-2 ${
-                  isLiked ? "text-red-500" : "text-gray-500"
-                } ${isAnimating ? "animate-ping" : ""}`}
-              />
-              Like
-            </button>
-            <div
-              className={`flex items-center ${
-                theme === "dark" ? "text-gray-200" : "text-gray-700"
-              }`}
-            >
-              <FaThumbsUp
-                className={`mr-2 ${
-                  theme === "dark" ? "text-green-400" : "text-green-500"
+              >
+                <FaHeart
+                  className={`mr-2 ${
+                    isLiked ? "text-red-500" : "text-gray-500"
+                  } ${isAnimating ? "animate-ping" : ""}`}
+                />
+                Like
+              </button>
+              <div
+                className={`flex items-center ${
+                  theme === "dark" ? "text-gray-200" : "text-gray-700"
                 }`}
-              />
-              <span className="font-medium">{likeCount} likes</span>
+              >
+                <FaThumbsUp
+                  className={`mr-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-500"
+                  }`}
+                />
+                <span className="font-medium">{likeCount} likes</span>
+              </div>
             </div>
-          </div>
 
-          <div className="prose max-w-none mb-8">
-            <h2
-              className={`text-xl font-semibold mb-3 ${
-                theme === "dark" ? "text-white" : "text-gray-800"
-              }`}
+            <div className="prose max-w-none mb-8">
+              <h2
+                className={`text-xl font-semibold mb-3 ${
+                  theme === "dark" ? "text-white" : "text-gray-800"
+                }`}
+              >
+                Description
+              </h2>
+              <p
+                className={theme === "dark" ? "text-gray-300" : "text-gray-700"}
+              >
+                {tip.description}
+              </p>
+            </div>
+
+            <div
+              className={`pt-4 border-t ${
+                theme === "dark"
+                  ? "border-gray-600 text-gray-400"
+                  : "border-gray-200 text-gray-500"
+              } text-sm`}
             >
-              Description
-            </h2>
-            <p className={theme === "dark" ? "text-gray-300" : "text-gray-700"}>
-              {tip.description}
-            </p>
-          </div>
-
-          <div
-            className={`pt-4 border-t ${
-              theme === "dark"
-                ? "border-gray-600 text-gray-400"
-                : "border-gray-200 text-gray-500"
-            } text-sm`}
-          >
-            <p>Last updated: {new Date(tip.updatedAt).toLocaleString()}</p>
+              <p>Last updated: {new Date(tip.updatedAt).toLocaleString()}</p>
+            </div>
           </div>
         </div>
       </div>
