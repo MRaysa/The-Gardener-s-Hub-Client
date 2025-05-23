@@ -28,7 +28,7 @@ const MyTips = () => {
       emptyStateBg: "bg-white",
     },
     dark: {
-      bg: "bg-gray-900",
+      bg: "bg-gray-800",
       text: "text-gray-100",
       secondaryText: "text-gray-300",
       card: "bg-gray-800",
@@ -155,7 +155,7 @@ const MyTips = () => {
 
   return (
     <div
-      className={`min-h-screen md:py-16 md:px-4  lg:px-8 m-8 rounded-2xl ${currentTheme.bg}   px-4 py-8 `}
+      className={`min-h-screen md:py-16 md:px-8  lg:px-16  ${currentTheme.bg}   px-4 py-8 `}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h1

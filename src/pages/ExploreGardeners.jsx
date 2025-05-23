@@ -31,7 +31,7 @@ const ExploreGardeners = () => {
       outlineButton: "border border-green-600 text-green-600 hover:bg-green-50",
     },
     dark: {
-      bg: "bg-gradient-to-b from-gray-900 to-gray-800",
+      bg: "bg-gradient-to-b from-gray-800 to-gray-800",
       text: "text-gray-100",
       card: "bg-gray-700",
       secondaryText: "text-gray-300",
@@ -107,7 +107,7 @@ const ExploreGardeners = () => {
 
   return (
     <div
-      className={`min-h-screen ${currentTheme.bg} py-12 px-4 sm:px-6 lg:px-8 m-4 rounded-2xl`}
+      className={`min-h-screen ${currentTheme.bg} py-12 px-4 sm:px-6 lg:px-8 `}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
