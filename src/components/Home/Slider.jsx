@@ -198,7 +198,7 @@ const Slider = () => {
                     </motion.p>
                     <Link to={slide.ctaLink}>
                       <motion.button
-                        className={`self-start px-4 py-1 md:px-6 md:py-2 rounded-full font-medium transition-all ${currentTheme.button} shadow-lg text-sm md:text-base`}
+                        className={` cursor-pointer self-start px-4 py-1 md:px-6 md:py-2 rounded-full font-medium transition-all ${currentTheme.button} shadow-lg text-sm md:text-base`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
