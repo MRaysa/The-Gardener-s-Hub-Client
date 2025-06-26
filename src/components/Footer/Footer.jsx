@@ -1,14 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaPinterest,
-  FaLeaf,
-} from "react-icons/fa";
+import { motion } from "framer-motion";
+import { FaFacebook, FaLinkedin, FaGithub, FaLeaf } from "react-icons/fa";
 import { MdEmail, MdLocalPhone, MdLocationOn } from "react-icons/md";
-import { useTheme } from "../../contexts/ThemeContext"; // Assuming you have a ThemeContext
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Footer = () => {
   const { theme } = useTheme();
@@ -33,11 +28,13 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center">
-              <FaLeaf
-                className={`text-3xl ${
-                  theme === "dark" ? "text-green-400" : "text-green-300"
-                } mr-2`}
-              />
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                className="h-10 w-10 bg-white rounded-full flex items-center justify-center mr-3"
+              >
+                {/* <FaLeaf className="text-green-600 text-xl" /> */}
+                <img src="/logo.png" alt="Logo" className="h-6 w-6" />
+              </motion.div>
               <span className="text-2xl font-bold">The Gardener's Hub</span>
             </Link>
             <p
@@ -48,7 +45,9 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.facebook.com/muniaislam.meem"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`${
                   theme === "dark"
                     ? "text-gray-400 hover:text-green-400"
@@ -58,36 +57,37 @@ const Footer = () => {
                 <FaFacebook size={24} />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/mst-aysa-siddika-meem/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`${
                   theme === "dark"
                     ? "text-gray-400 hover:text-green-400"
                     : "text-green-200 hover:text-white"
                 } transition`}
               >
-                <FaInstagram size={24} />
+                <FaLinkedin size={24} />
               </a>
               <a
-                href="#"
+                href="https://github.com/MRaysa"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`${
                   theme === "dark"
                     ? "text-gray-400 hover:text-green-400"
                     : "text-green-200 hover:text-white"
                 } transition`}
               >
-                <FaTwitter size={24} />
-              </a>
-              <a
-                href="#"
-                className={`${
-                  theme === "dark"
-                    ? "text-gray-400 hover:text-green-400"
-                    : "text-green-200 hover:text-white"
-                } transition`}
-              >
-                <FaPinterest size={24} />
+                <FaGithub size={24} />
               </a>
             </div>
+            <p
+              className={`text-sm ${
+                theme === "dark" ? "text-gray-500" : "text-green-200"
+              }`}
+            >
+              Developed by Mst. Aysa Siddika Meem
+            </p>
           </div>
 
           {/* Quick Links */}
@@ -117,64 +117,58 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/" className={`${hoverText} transition`}>
-                  Gardening Events
+                <Link to="/about-us" className={`${hoverText} transition`}>
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link to="/share-tip" className={`${hoverText} transition`}>
-                  Submit a Tip
+                <Link to="/contact-us" className={`${hoverText} transition`}>
+                  Contact Us
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Resources */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 border-b-2 ${borderColor} pb-2`}
             >
-              Categories
+              Resources
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/category/composting"
-                  className={`${hoverText} transition`}
-                >
-                  Composting
+                <Link to="/blog" className={`${hoverText} transition`}>
+                  Gardening Blog
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/category/plant-care"
+                  to="/seasonal-guide"
                   className={`${hoverText} transition`}
                 >
-                  Plant Care
+                  Seasonal Guide
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/category/hydroponics"
+                  to="/plant-database"
                   className={`${hoverText} transition`}
                 >
-                  Hydroponics
+                  Plant Database
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/category/balcony-gardens"
+                  to="/gardening-tools"
                   className={`${hoverText} transition`}
                 >
-                  Balcony Gardens
+                  Tools & Equipment
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/category/urban-farming"
-                  className={`${hoverText} transition`}
-                >
-                  Urban Farming
+                <Link to="/faq" className={`${hoverText} transition`}>
+                  FAQ
                 </Link>
               </li>
             </ul>
@@ -195,7 +189,7 @@ const Footer = () => {
                   } mt-1 mr-2`}
                   size={20}
                 />
-                <span>123 Garden Lane, Greenville, GT 12345</span>
+                <span>Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center">
                 <MdEmail
@@ -205,10 +199,10 @@ const Footer = () => {
                   size={20}
                 />
                 <a
-                  href="mailto:hello@gardenershub.com"
+                  href="mailto:aysasiddikameem@gmail.com"
                   className={`${hoverText} transition`}
                 >
-                  hello@gardenershub.com
+                  aysasiddikameem@gmail.com
                 </a>
               </li>
               <li className="flex items-center">
@@ -219,10 +213,10 @@ const Footer = () => {
                   size={20}
                 />
                 <a
-                  href="tel:+11234567890"
+                  href="tel:+8801234567890"
                   className={`${hoverText} transition`}
                 >
-                  (123) 456-7890
+                  +880 1234 567890
                 </a>
               </li>
             </ul>
@@ -242,7 +236,7 @@ const Footer = () => {
             >
               Subscribe to our monthly newsletter for exclusive content
             </p>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 mt-4">
               <input
                 type="email"
                 placeholder="Your email address"
@@ -257,7 +251,7 @@ const Footer = () => {
                   theme === "dark"
                     ? "bg-green-600 hover:bg-green-700"
                     : "bg-yellow-500 hover:bg-yellow-600"
-                } text-white font-medium px-6 py-2 rounded transition`}
+                } text-white font-medium px-6 py-2 rounded transition cursor-pointer`}
               >
                 Subscribe
               </button>
@@ -265,34 +259,32 @@ const Footer = () => {
           </div>
         </div>
 
-        {
-          /* Copyright and Legal */
-          <div
-            className={`border-t ${
-              theme === "dark" ? "border-gray-800" : "border-green-700"
-            } pt-6 flex flex-col md:flex-row justify-between items-center transition-colors duration-300`}
+        {/* Copyright and Legal */}
+        <div
+          className={`border-t ${
+            theme === "dark" ? "border-gray-800" : "border-green-700"
+          } pt-6 flex flex-col md:flex-row justify-between items-center transition-colors duration-300`}
+        >
+          <p
+            className={`${
+              theme === "dark" ? "text-gray-500" : "text-green-200"
+            } text-sm mb-2 md:mb-0`}
           >
-            <p
-              className={`${
-                theme === "dark" ? "text-gray-500" : "text-green-200"
-              } text-sm mb-2 md:mb-0`}
-            >
-              &copy; {new Date().getFullYear()} The Gardener's Hub. All rights
-              reserved.
-            </p>
-            <div className="flex space-x-4 text-sm">
-              <Link to="/privacy" className={`${hoverText} transition`}>
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className={`${hoverText} transition`}>
-                Terms of Service
-              </Link>
-              <Link to="/cookies" className={`${hoverText} transition`}>
-                Cookie Policy
-              </Link>
-            </div>
+            &copy; {new Date().getFullYear()} The Gardener's Hub. All rights
+            reserved. Developed by Mst. Aysa Siddika Meem
+          </p>
+          <div className="flex space-x-4 text-sm">
+            <Link to="/privacy" className={`${hoverText} transition`}>
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className={`${hoverText} transition`}>
+              Terms of Service
+            </Link>
+            <Link to="/sitemap" className={`${hoverText} transition`}>
+              Sitemap
+            </Link>
           </div>
-        }
+        </div>
       </div>
     </footer>
   );
