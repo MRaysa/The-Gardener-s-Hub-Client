@@ -11,6 +11,8 @@ import BrowseTips from "../pages/BrowseTips";
 import TipDetailsPage from "../pages/TipDetailsPage";
 import UpdateTipPage from "../pages/UpdateTipPage";
 import PrivateRoute from "../routes/PrivateRoute";
+import AboutUs from "../components/AboutUs";
+import ContactUs from "../components/ContactUs";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -67,6 +69,14 @@ const router = createBrowserRouter([
       {
         path: "/update-tip/:id",
         Component: UpdateTipPage,
+      },
+      {
+        path: "/about-us",
+        Component: AboutUs,
+      },
+      {
+        path: "/contact-us",
+        Component: ContactUs,
       },
     ],
   },

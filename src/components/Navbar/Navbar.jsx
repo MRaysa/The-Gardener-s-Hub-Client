@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -15,6 +15,8 @@ import {
   FaSearch,
   FaLeaf,
   FaPenAlt,
+  FaEnvelope,
+  FaInfoCircle,
 } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Tooltip } from "react-tooltip";
@@ -24,7 +26,16 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -43,6 +54,8 @@ const Navbar = () => {
 
   // Theme-based styles
   const bgColor = theme === "dark" ? "bg-gray-900" : "bg-green-800";
+  const scrolledBgColor =
+    theme === "dark" ? "bg-gray-900/95" : "bg-green-800/95";
   const textColor = theme === "dark" ? "text-gray-200" : "text-white";
   const hoverText =
     theme === "dark" ? "hover:text-green-400" : "hover:text-green-200";
@@ -66,12 +79,28 @@ const Navbar = () => {
       path: "/share-tip",
       name: "Share a Tip",
       icon: <FaPenAlt className="mr-1" />,
+      private: true,
     },
-    { path: "/my-tips", name: "My Tips", icon: <FaLeaf className="mr-1" /> },
+    {
+      path: "/my-tips",
+      name: "My Tips",
+      icon: <FaLeaf className="mr-1" />,
+      private: true,
+    },
     {
       path: "/browse-tips",
       name: "Browse Tips",
       icon: <FaSearch className="mr-1" />,
+    },
+    {
+      path: "/about-us",
+      name: "About Us",
+      icon: <FaInfoCircle className="mr-1" />,
+    },
+    {
+      path: "/contact-us",
+      name: "Contact Us",
+      icon: <FaEnvelope className="mr-1" />,
     },
   ];
 
@@ -84,9 +113,11 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`${bgColor} ${textColor} shadow-lg transition-colors duration-300`}
+      className={`${
+        isScrolled ? scrolledBgColor : bgColor
+      } ${textColor} shadow-lg transition-colors duration-300 sticky top-0 z-50`}
     >
-      <div className="max-w-7xl mx-auto px-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex-shrink-0 flex items-center">
@@ -95,7 +126,7 @@ const Navbar = () => {
                 whileHover={{ rotate: 360 }}
                 className="h-8 w-8 bg-white rounded-full flex items-center justify-center mr-2"
               >
-                <img src="/public/logo.png" alt="" />
+                <img src="/logo.png" alt="Logo" className="h-6 w-6" />
               </motion.div>
               <span className="font-bold text-xl hidden sm:inline">
                 The Gardener's Hub
@@ -103,23 +134,26 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          {/* Desktop Navigation - Now only shows on lg screens and up */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex flex-1 justify-center mx-4">
             <div className="flex items-center space-x-1">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `px-3 py-2 text-sm font-medium transition duration-300 flex items-center ${getNavLinkClass(
-                      { isActive }
-                    )}`
-                  }
-                >
-                  {item.icon}
-                  <span className="ml-1">{item.name}</span>
-                </NavLink>
-              ))}
+              {navItems.map((item) => {
+                if (item.private && !user) return null;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `px-3 py-2 text-sm font-medium transition duration-300 flex items-center ${getNavLinkClass(
+                        { isActive }
+                      )}`
+                    }
+                  >
+                    {item.icon}
+                    <span className="ml-1">{item.name}</span>
+                  </NavLink>
+                );
+              })}
             </div>
           </div>
 
@@ -136,7 +170,7 @@ const Navbar = () => {
               {theme === "light" ? <FaMoon /> : <FaSun />}
             </button>
 
-            {/* User Profile -  visible on all devices */}
+            {/* User Profile */}
             {user ? (
               <div className="relative">
                 <button
@@ -166,7 +200,6 @@ const Navbar = () => {
                   )}
                 </button>
 
-                {/* React Tooltip */}
                 <Tooltip
                   anchorId="user-profile-tooltip"
                   className="z-50"
@@ -252,7 +285,7 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Mobile menu button - Shows on md and smaller screens */}
+            {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`lg:hidden p-2 rounded-md ${hoverText} focus:outline-none cursor-pointer`}
@@ -264,7 +297,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation - Shows on md and smaller screens */}
+      {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -274,21 +307,24 @@ const Navbar = () => {
           className={`lg:hidden ${mobileMenuBg}`}
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `block px-3 py-2 rounded-md text-base font-medium flex items-center ${
-                    isActive ? `${activeLinkBg} ${activeLinkText}` : hoverText
-                  }`
-                }
-              >
-                {item.icon}
-                <span className="ml-2">{item.name}</span>
-              </NavLink>
-            ))}
+            {navItems.map((item) => {
+              if (item.private && !user) return null;
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-3 py-2 rounded-md text-base font-medium flex items-center ${
+                      isActive ? `${activeLinkBg} ${activeLinkText}` : hoverText
+                    }`
+                  }
+                >
+                  {item.icon}
+                  <span className="ml-2">{item.name}</span>
+                </NavLink>
+              );
+            })}
 
             <div className="border-t border-gray-600 pt-2">
               {user ? (
