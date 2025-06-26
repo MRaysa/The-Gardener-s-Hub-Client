@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
   FaMapMarkerAlt,
@@ -8,6 +7,7 @@ import {
   FaStar,
   FaRegStar,
   FaUserFriends,
+  FaChevronRight,
 } from "react-icons/fa";
 import { useTheme } from "../../contexts/ThemeContext";
 import { toast } from "react-hot-toast";
@@ -28,6 +28,7 @@ const ActiveGardeners = () => {
       secondaryText: "text-gray-600",
       button: "bg-green-600 hover:bg-green-700 text-white",
       outlineButton: "border border-green-600 text-green-600 hover:bg-green-50",
+      seeMoreButton: "bg-green-100 hover:bg-green-200 text-green-700",
     },
     dark: {
       bg: "bg-gradient-to-b from-gray-800 to-gray-800",
@@ -36,6 +37,7 @@ const ActiveGardeners = () => {
       secondaryText: "text-gray-300",
       button: "bg-green-700 hover:bg-green-800 text-white",
       outlineButton: "border border-green-500 text-green-400 hover:bg-gray-600",
+      seeMoreButton: "bg-gray-600 hover:bg-gray-500 text-green-300",
     },
   };
 
@@ -74,7 +76,6 @@ const ActiveGardeners = () => {
         secondary: theme === "dark" ? "#1f2937" : "#fff",
       },
     });
-    // Here you would typically make an API call to follow the gardener
   };
 
   const handleMessage = () => {
@@ -89,7 +90,6 @@ const ActiveGardeners = () => {
         secondary: theme === "dark" ? "#1f2937" : "#fff",
       },
     });
-    //
   };
 
   if (loading) {
@@ -220,7 +220,7 @@ const ActiveGardeners = () => {
         </motion.div>
 
         {/* Gardeners Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {gardeners.map((gardener) => (
             <motion.div
               key={gardener._id}
@@ -230,10 +230,9 @@ const ActiveGardeners = () => {
               whileHover={{ y: -5 }}
               className={`${
                 currentTheme.card
-              } rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer ${
+              } rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all ${
                 theme === "dark" ? "shadow-gray-800" : "shadow-gray-200"
               }`}
-              onClick={() => setSelectedGardener(gardener)}
             >
               <div className="relative h-64">
                 <img
@@ -281,7 +280,7 @@ const ActiveGardeners = () => {
                   {gardener.bio}
                 </p>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-4">
                   <div className="flex">
                     {[...Array(5)].map((_, i) =>
                       i < (gardener.rating || 4) ? (
@@ -300,6 +299,17 @@ const ActiveGardeners = () => {
                     <span>{gardener.totalSharedTips || 0} tips</span>
                   </div>
                 </div>
+
+                {/* See More Button */}
+                <motion.button
+                  onClick={() => setSelectedGardener(gardener)}
+                  className={`w-full ${currentTheme.seeMoreButton} cursor-pointer py-2 px-4 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>See More</span>
+                  <FaChevronRight className="text-sm" />
+                </motion.button>
               </div>
             </motion.div>
           ))}
