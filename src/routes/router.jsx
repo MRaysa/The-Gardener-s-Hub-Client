@@ -13,6 +13,13 @@ import UpdateTipPage from "../pages/UpdateTipPage";
 import PrivateRoute from "../routes/PrivateRoute";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import DashboardLayout from "../components/dashboard/DashboardLayout";
+import Dashboard from "../components/dashboard/Dashboard";
+import AllCommunityGardenTips from "../components/dashboard/AllCommunityGardenTips";
+import DashboardShareTip from "../components/dashboard/DashboardShareTip";
+import DashboardMyTips from "../components/dashboard/DashboardMyTips";
+import DashboardUpdateTips from "../components/dashboard/DashboardUpdateTips";
+import Profile from "../components/dashboard/Profile";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -77,6 +84,41 @@ const router = createBrowserRouter([
       {
         path: "/contact-us",
         Component: ContactUs,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "all-gardeners",
+        element: <AllCommunityGardenTips />,
+      },
+      {
+        path: "add-tips",
+        element: <DashboardShareTip />,
+      },
+      {
+        path: "my-garden-tips",
+        element: <DashboardMyTips />,
+      },
+      {
+        path: "my-tips/update-tip/:id",
+        element: <DashboardUpdateTips />,
+      },
+      {
+        path: "profile",
+        element: <Profile></Profile>,
       },
     ],
   },
