@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import {
   FaHome,
   FaUsers,
@@ -9,17 +11,15 @@ import {
   FaUser,
   FaSun,
   FaMoon,
-  FaSeedling,
-  FaChartLine,
   FaSignOutAlt,
 } from "react-icons/fa";
 import { GiGreenhouse } from "react-icons/gi";
-import { AuthContext } from "../../contexts/AuthContext";
 
 const DashboardLayout = () => {
-  const { user, logout } = useContext(AuthContext);
-  const [darkMode, setDarkMode] = useState(false);
+  const { user, signOutUser } = useContext(AuthContext);
+  const { theme, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -43,14 +43,16 @@ const DashboardLayout = () => {
     { path: "profile", name: "My Green Profile", icon: <FaUser size={18} /> },
   ];
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle("dark");
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await signOutUser();
+      navigate("/");
+      setSidebarOpen(false);
+    } catch (error) {
+      console.error("Sign out error:", error);
+      setIsSigningOut(false);
+    }
   };
 
   const sidebarVariants = {
@@ -61,7 +63,7 @@ const DashboardLayout = () => {
   return (
     <div
       className={`flex h-screen ${
-        darkMode ? "dark bg-gray-900" : "bg-gray-50"
+        theme === "dark" ? "dark bg-gray-900" : "bg-gray-50"
       }`}
     >
       {/* Animated Sidebar */}
@@ -70,45 +72,44 @@ const DashboardLayout = () => {
         animate={sidebarOpen ? "open" : "closed"}
         variants={sidebarVariants}
         className={`${
-          darkMode ? "bg-gray-800" : "bg-white"
-        } shadow-xl flex flex-col justify-between`}
+          theme === "dark" ? "bg-gray-800" : "bg-white"
+        } shadow-xl flex flex-col justify-between transition-all duration-300`}
       >
         <div>
+          {/* Logo/Brand */}
           <div className="p-4 flex items-center justify-between">
             {sidebarOpen ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center"
-              >
+              <Link to="/dashboard" className="flex items-center">
                 <GiGreenhouse className="text-green-500 text-2xl mr-2" />
                 <h1
                   className={`text-xl font-bold ${
-                    darkMode ? "text-white" : "text-gray-800"
+                    theme === "dark" ? "text-white" : "text-gray-800"
                   }`}
                 >
                   GardenHub
                 </h1>
-              </motion.div>
+              </Link>
             ) : (
-              <GiGreenhouse className="text-green-500 text-2xl mx-auto" />
+              <Link to="/dashboard">
+                <GiGreenhouse className="text-green-500 text-2xl mx-auto" />
+              </Link>
             )}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className={`p-2 rounded-full ${
-                darkMode
+                theme === "dark"
                   ? "hover:bg-gray-700 text-white"
                   : "hover:bg-gray-100 text-gray-600"
-              }`}
+              } transition-colors`}
             >
               {sidebarOpen ? "◀" : "▶"}
             </button>
           </div>
 
-          {/* User Profile Section */}
+          {/* User Profile */}
           <div
             className={`p-4 border-b ${
-              darkMode ? "border-gray-700" : "border-gray-200"
+              theme === "dark" ? "border-gray-700" : "border-gray-200"
             }`}
           >
             <div className="flex items-center space-x-3">
@@ -118,17 +119,17 @@ const DashboardLayout = () => {
                 className="w-10 h-10 rounded-full border-2 border-green-500"
               />
               {sidebarOpen && (
-                <div className="overflow-hidden">
+                <div>
                   <p
                     className={`font-medium ${
-                      darkMode ? "text-white" : "text-gray-800"
+                      theme === "dark" ? "text-white" : "text-gray-800"
                     }`}
                   >
                     {user?.displayName || "Green Gardener"}
                   </p>
                   <p
                     className={`text-sm ${
-                      darkMode ? "text-gray-400" : "text-gray-500"
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
                     {user?.email || "gardener@example.com"}
@@ -151,23 +152,16 @@ const DashboardLayout = () => {
                     to={`/dashboard/${item.path}`}
                     className={`flex items-center p-3 rounded-lg transition-all ${
                       location.pathname.includes(item.path)
-                        ? darkMode
+                        ? theme === "dark"
                           ? "bg-green-700 text-white"
                           : "bg-green-100 text-green-800"
-                        : darkMode
+                        : theme === "dark"
                         ? "hover:bg-gray-700 text-gray-200"
                         : "hover:bg-gray-100 text-gray-700"
                     }`}
                   >
                     <span className="mr-3">{item.icon}</span>
-                    {sidebarOpen && (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                      >
-                        {item.name}
-                      </motion.span>
-                    )}
+                    {sidebarOpen && <span>{item.name}</span>}
                   </Link>
                 </motion.li>
               ))}
@@ -175,41 +169,55 @@ const DashboardLayout = () => {
           </nav>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom buttons */}
         <div className="p-4 space-y-3">
+          {/* Theme toggle - synchronized with navbar */}
           <button
             onClick={toggleTheme}
             className={`p-3 rounded-lg flex items-center justify-center w-full ${
-              darkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"
-            } hover:opacity-90 transition-opacity`}
+              theme === "dark"
+                ? "bg-gray-700 hover:bg-gray-600 text-white"
+                : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+            } transition-colors`}
           >
-            {darkMode ? (
+            {theme === "dark" ? (
               <FaSun className="mr-2" />
             ) : (
               <FaMoon className="mr-2" />
             )}
             {sidebarOpen && (
-              <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
+              <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
             )}
           </button>
 
+          {/* Sign Out button */}
           <button
-            onClick={handleLogout}
+            onClick={handleSignOut}
+            disabled={isSigningOut}
             className={`p-3 rounded-lg flex items-center justify-center w-full ${
-              darkMode ? "bg-red-800 text-white" : "bg-red-100 text-red-700"
-            } hover:opacity-90 transition-opacity`}
+              theme === "dark"
+                ? "bg-red-800 hover:bg-red-700 text-white"
+                : "bg-red-100 hover:bg-red-200 text-red-700"
+            } transition-colors ${
+              isSigningOut ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
-            <FaSignOutAlt className="mr-2" />
-            {sidebarOpen && <span>Logout</span>}
+            <FaSignOutAlt
+              className={`mr-2 ${isSigningOut ? "animate-pulse" : ""}`}
+            />
+            {sidebarOpen && (
+              <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
+            )}
           </button>
 
+          {/* Home button */}
           <Link
             to="/"
-            className={`p-3 rounded-lg flex items-center justify-center w-full mt-3 ${
-              darkMode
+            className={`p-3 rounded-lg flex items-center justify-center w-full ${
+              theme === "dark"
                 ? "bg-blue-800 hover:bg-blue-700 text-white"
                 : "bg-blue-100 hover:bg-blue-200 text-blue-700"
-            } transition-colors duration-200`}
+            } transition-colors`}
           >
             <FaHome className="mr-2" />
             {sidebarOpen && <span>Home</span>}
@@ -217,7 +225,7 @@ const DashboardLayout = () => {
         </div>
       </motion.div>
 
-      {/* Main Content Area */}
+      {/* Main content area */}
       <main className="flex-1 overflow-auto">
         <AnimatePresence mode="wait">
           <motion.div
